@@ -3,6 +3,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/public/"
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.2"
