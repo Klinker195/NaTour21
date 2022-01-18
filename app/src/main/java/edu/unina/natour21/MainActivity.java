@@ -16,13 +16,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import io.jenetics.jpx.Track;
+import edu.unina.natour21.dto.PostDTO;
+import edu.unina.natour21.models.Post;
 import io.jenetics.jpx.WayPoint;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-                String url = "http://ec2-15-161-154-80.eu-south-1.compute.amazonaws.com:8080/post/1";
+                String url = "http://ec2-15-161-60-195.eu-south-1.compute.amazonaws.com:8080/post/1";
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
                     @Override
