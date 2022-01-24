@@ -1,45 +1,51 @@
 package edu.unina.natour21;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
-
-import java.util.List;
-
-import edu.unina.natour21.dto.PostDTO;
-import edu.unina.natour21.models.Post;
-import io.jenetics.jpx.WayPoint;
+import edu.unina.natour21.utility.NatourUIDesignHelper;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView imageView;
-    TextView textView;
-    Button button;
+    AnimatedVectorDrawable moonAnimation;
+    ImageView moonImageView;
+    AnimatedVectorDrawable earthAnimation;
+    ImageView earthImageView;
+
+    TextView natourTextView;
+
+    Button signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        setContentView(R.layout.natour_signin_activity);
 
-        imageView = findViewById(R.id.imageView);
-        textView = findViewById(R.id.textView);
-        button = findViewById(R.id.button);
+        moonImageView = findViewById(R.id.moonImageView);
+        moonAnimation = (AnimatedVectorDrawable) moonImageView.getDrawable();
+        moonAnimation.start();
 
+        earthImageView = findViewById(R.id.earthImageView);
+        earthAnimation = (AnimatedVectorDrawable) earthImageView.getDrawable();
+        earthAnimation.start();
 
+        natourTextView = (TextView) findViewById(R.id.natourTextView);
+
+        signInButton = (Button) findViewById(R.id.signInButton);
+
+        NatourUIDesignHelper designHelper = new NatourUIDesignHelper();
+
+        designHelper.setTextGradient(natourTextView);
+        designHelper.setTextGradient(signInButton);
+
+        /*
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +100,20 @@ public class MainActivity extends AppCompatActivity {
                 queue.add(jsonRequest);
             }
         });
+         */
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        earthAnimation.stop();
+        moonAnimation.stop();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        earthAnimation.start();
+        moonAnimation.start();
     }
 }
