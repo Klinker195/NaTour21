@@ -1,6 +1,6 @@
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/natour_signin_earth" >
+    android:drawable="@drawable/natour_mainscreen_moon" >
     <target
         android:name="rotationGroup"
-        android:animation="@animator/inverse_rotation" />
+        android:animation="@animator/rotation" />
 </animated-vector>

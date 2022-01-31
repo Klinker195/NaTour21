@@ -1,49 +1,79 @@
-package edu.unina.natour21;
+package edu.unina.natour21.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import edu.unina.natour21.R;
 import edu.unina.natour21.utility.NatourUIDesignHelper;
+import edu.unina.natour21.viewmodel.MainScreenViewModel;
 
-public class MainActivity extends AppCompatActivity {
+public class MainScreenActivity extends AppCompatActivity {
 
-    AnimatedVectorDrawable moonAnimation;
-    ImageView moonImageView;
-    AnimatedVectorDrawable earthAnimation;
-    ImageView earthImageView;
-
-    TextView natourTextView;
-
-    Button signInButton;
+    private AnimatedVectorDrawable moonAnimation;
+    private ImageView moonImageView;
+    private AnimatedVectorDrawable earthAnimation;
+    private ImageView earthImageView;
+    private TextView natourTextView;
+    private Button signInButton;
+    private ConstraintLayout planetLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        setContentView(R.layout.natour_signin_activity);
 
-        moonImageView = findViewById(R.id.moonImageView);
+        // Set Standard UI
+        NatourUIDesignHelper designHelper = new NatourUIDesignHelper();
+        designHelper.setFullscreen(this);
+
+        setContentView(R.layout.natour_mainscreen_activity);
+
+        // Find Views
+        moonImageView = findViewById(R.id.mainScreenMoonImageView);
+        earthImageView = findViewById(R.id.mainScreenEarthImageView);
+        natourTextView = (TextView) findViewById(R.id.mainScreenNatourTextView);
+        signInButton = (Button) findViewById(R.id.mainScreenStartButton);
+        planetLayout = (ConstraintLayout) findViewById(R.id.mainScreenPlanetLayout);
+
+        // Start Anims
         moonAnimation = (AnimatedVectorDrawable) moonImageView.getDrawable();
         moonAnimation.start();
-
-        earthImageView = findViewById(R.id.earthImageView);
         earthAnimation = (AnimatedVectorDrawable) earthImageView.getDrawable();
         earthAnimation.start();
+        natourTextView.startAnimation((Animation) AnimationUtils.loadAnimation(MainScreenActivity.this, R.anim.up_smooth_in));
+        signInButton.startAnimation((Animation) AnimationUtils.loadAnimation(MainScreenActivity.this, R.anim.up_smooth_in_slow));
+        planetLayout.startAnimation((Animation) AnimationUtils.loadAnimation(MainScreenActivity.this, R.anim.up_smooth_in_slower));
 
-        natourTextView = (TextView) findViewById(R.id.natourTextView);
-
-        signInButton = (Button) findViewById(R.id.signInButton);
-
-        NatourUIDesignHelper designHelper = new NatourUIDesignHelper();
-
+        // Set Gradients
         designHelper.setTextGradient(natourTextView);
         designHelper.setTextGradient(signInButton);
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent switchActivityIntent = new Intent(MainScreenActivity.this, AuthenticationActivity.class);
+                startActivity(switchActivityIntent);
+            }
+        });
+
+        MainScreenViewModel viewModel = new ViewModelProvider(this).get(MainScreenViewModel.class);
+
+        /*
+        Amplify.Auth.fetchAuthSession(
+                result -> Log.i("AmplifyQuickstart", result.toString()),
+                error -> Log.e("AmplifyQuickstart", error.toString())
+        );
+        */
 
         /*
         button.setOnClickListener(new View.OnClickListener() {
@@ -116,4 +146,5 @@ public class MainActivity extends AppCompatActivity {
         earthAnimation.start();
         moonAnimation.start();
     }
+
 }

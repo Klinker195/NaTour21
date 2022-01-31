@@ -1,16 +1,13 @@
-package edu.unina.natour21.models;
+package edu.unina.natour21.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
 import edu.unina.natour21.dto.PostDTO;
-import edu.unina.natour21.dto.UserDTO;
 import io.jenetics.jpx.GPX;
 
 public class Post {
@@ -136,6 +133,8 @@ public class Post {
     public void setPics(LinkedList<Bitmap> pics) {
         this.pics = pics;
     }
+
+    public Integer getTotalUps() { return this.ups - this.downs; };
 
     public Integer getUps() {
         return ups;

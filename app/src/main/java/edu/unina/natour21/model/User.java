@@ -1,4 +1,4 @@
-package edu.unina.natour21.models;
+package edu.unina.natour21.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,10 +9,10 @@ import java.util.LinkedList;
 
 import edu.unina.natour21.dto.PostDTO;
 import edu.unina.natour21.dto.UserDTO;
-import io.jenetics.jpx.GPX;
 
 public class User {
 
+    private final String uuid;
     private String nickname;
     private Bitmap propic;
     private String email;
@@ -25,6 +25,7 @@ public class User {
     private LinkedList<User> followedUsers;
 
     public User(UserDTO userDTO) {
+        this.uuid = userDTO.getUuid();
         this.nickname = userDTO.getNickname();
         this.email = userDTO.getEmail();
         this.isAdmin = userDTO.getIsAdmin();
@@ -57,6 +58,8 @@ public class User {
         }
 
     }
+
+    public String getUuid() { return uuid; }
 
     public String getNickname() {
         return nickname;

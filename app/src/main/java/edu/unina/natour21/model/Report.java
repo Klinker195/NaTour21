@@ -1,4 +1,4 @@
-package edu.unina.natour21.models;
+package edu.unina.natour21.model;
 
 import edu.unina.natour21.dto.ReportDTO;
 

@@ -7,6 +7,7 @@ public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = -1552640971990839394L;
 
+    private String uuid;
     private String nickname;
     private String propic;
     private String email;
@@ -21,6 +22,10 @@ public class UserDTO implements Serializable {
     public UserDTO() {
         super();
     }
+
+    public String getUuid() { return uuid; }
+
+    public void setUuid(String uuid) { this.uuid = uuid; }
 
     public String getNickname() {
         return nickname;

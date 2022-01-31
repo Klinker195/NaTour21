@@ -2,13 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainScreenConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".view.MainScreenActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/mainScreenBackgroundImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
@@ -17,11 +18,11 @@
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/natour_signin_backgroundgradient"
+        app:srcCompat="@drawable/natour_mainscreen_backgroundgradient"
         tools:ignore="ImageContrastCheck" />
 
     <TextView
-        android:id="@+id/natourTextView"
+        android:id="@+id/mainScreenNatourTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="140dp"
@@ -30,47 +31,50 @@
         android:textSize="72sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintTop_toTopOf="@+id/mainScreenBackgroundImageView" />
 
     <Button
-        android:id="@+id/signInButton"
-        android:layout_width="290dp"
+        android:id="@+id/mainScreenStartButton"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:backgroundTint="@color/white"
         android:backgroundTintMode="add"
-        android:fontFamily="@font/redhattext_medium"
+        android:elevation="20dp"
+        android:fontFamily="@font/redhattext_bold"
         android:hapticFeedbackEnabled="true"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:text="Sign in with Google"
-        android:textAlignment="textStart"
-        android:textAllCaps="false"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="Start exploring"
+        android:textAlignment="center"
+        android:textAllCaps="true"
         android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textSize="22sp"
         app:cornerRadius="40.0dp"
-        app:icon="@drawable/natour_signin_google_icon"
-        app:iconPadding="10dp"
-        app:iconSize="30dp"
         app:iconTintMode="multiply"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintBottom_toTopOf="@+id/mainScreenPlanetLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2"
-        app:rippleColor="@color/green_signin_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/mainScreenNatourTextView"
+        app:layout_constraintVertical_bias="0.571"
+        app:rippleColor="@color/green_signin_icon"
+        app:strokeColor="#DFDFDF"
+        app:strokeWidth="0.5dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/mainScreenPlanetLayout"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:layout_marginBottom="32dp"
         android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintBottom_toBottomOf="@+id/mainScreenBackgroundImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/moonImageView"
+            android:id="@+id/mainScreenMoonImageView"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:adjustViewBounds="false"
@@ -82,17 +86,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
-            app:srcCompat="@drawable/animator_natour_signin_moon" />
+            app:srcCompat="@drawable/animator_natour_mainscreen_moon" />
 
         <ImageView
-            android:id="@+id/earthImageView"
+            android:id="@+id/mainScreenEarthImageView"
             android:layout_width="220dp"
             android:layout_height="220dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/animator_natour_signin_earth" />
+            app:srcCompat="@drawable/animator_natour_mainscreen_earth" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

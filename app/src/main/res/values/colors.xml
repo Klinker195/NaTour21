@@ -6,6 +6,10 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="black_30alpha">#4D000000</color>
+    <color name="black_60alpha">#99000000</color>
+    <color name="error_color">#FF5151</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green_signin_icon">#8BD093</color>
+    <color name="edit_text_color">#339DA1</color>
 </resources>
