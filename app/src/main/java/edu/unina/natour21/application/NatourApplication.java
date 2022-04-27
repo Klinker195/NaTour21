@@ -11,6 +11,7 @@ import edu.unina.natour21.model.User;
 
 public class NatourApplication extends Application {
 
+    // Giusto?
     private static User currentUser;
 
     @Override

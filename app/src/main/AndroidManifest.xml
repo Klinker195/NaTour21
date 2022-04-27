@@ -4,6 +4,17 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
+
     <application
         android:name=".application.NatourApplication"
         android:allowBackup="true"
@@ -14,14 +25,66 @@
         android:theme="@style/Theme.NaTour21"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".view.AuthenticationActivity"
-            android:exported="true" />
+            android:name=".view.activity.GoogleLoginFailureActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="natour" android:host="signout" />
+            </intent-filter>
+        </activity>
         <activity
-            android:name=".view.MainScreenActivity"
+            android:name=".view.activity.GoogleLoginSuccessActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="natour" android:host="callback" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name="com.amplifyframework.auth.cognito.activities.HostedUIRedirectActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
+                <data android:scheme="natour" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".view.activity.RegistrationFormActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
+            android:name=".view.activity.VerificationActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
+            android:name=".view.activity.SignUpActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
+            android:name=".view.activity.ResetPasswordActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
+            android:name=".view.activity.AuthenticationActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
+            android:name=".view.activity.IntroductionActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

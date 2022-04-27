@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.MainScreenActivity">
+    tools:context=".view.activity.IntroductionActivity">
 
     <ImageView
         android:id="@+id/mainScreenBackgroundImageView"
@@ -22,7 +22,7 @@
         tools:ignore="ImageContrastCheck" />
 
     <TextView
-        android:id="@+id/mainScreenNatourTextView"
+        android:id="@+id/introductionNatourTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="140dp"
@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="@+id/mainScreenBackgroundImageView" />
 
     <Button
-        android:id="@+id/mainScreenStartButton"
+        android:id="@+id/introductionStartButton"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:backgroundTint="@color/white"
@@ -53,17 +53,17 @@
         android:textSize="22sp"
         app:cornerRadius="40.0dp"
         app:iconTintMode="multiply"
-        app:layout_constraintBottom_toTopOf="@+id/mainScreenPlanetLayout"
+        app:layout_constraintBottom_toTopOf="@+id/introductionPlanetLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainScreenNatourTextView"
+        app:layout_constraintTop_toBottomOf="@+id/introductionNatourTextView"
         app:layout_constraintVertical_bias="0.571"
         app:rippleColor="@color/green_signin_icon"
         app:strokeColor="#DFDFDF"
         app:strokeWidth="0.5dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/mainScreenPlanetLayout"
+        android:id="@+id/introductionPlanetLayout"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_marginBottom="32dp"
@@ -74,7 +74,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/mainScreenMoonImageView"
+            android:id="@+id/introductionMoonImageView"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:adjustViewBounds="false"
@@ -89,7 +89,7 @@
             app:srcCompat="@drawable/animator_natour_mainscreen_moon" />
 
         <ImageView
-            android:id="@+id/mainScreenEarthImageView"
+            android:id="@+id/introductionEarthImageView"
             android:layout_width="220dp"
             android:layout_height="220dp"
             app:layout_constraintBottom_toBottomOf="parent"

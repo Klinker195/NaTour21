@@ -1,4 +1,4 @@
-package edu.unina.natour21.view;
+package edu.unina.natour21.view.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -15,10 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.unina.natour21.R;
-import edu.unina.natour21.utility.NatourUIDesignHelper;
-import edu.unina.natour21.viewmodel.MainScreenViewModel;
+import edu.unina.natour21.utility.NatourUIDesignHandler;
+import edu.unina.natour21.viewmodel.IntroductionViewModel;
 
-public class MainScreenActivity extends AppCompatActivity {
+public class IntroductionActivity extends AppCompatActivity {
+
+    private IntroductionViewModel viewModel;
 
     private AnimatedVectorDrawable moonAnimation;
     private ImageView moonImageView;
@@ -32,41 +34,44 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set Standard UI
-        NatourUIDesignHelper designHelper = new NatourUIDesignHelper();
-        designHelper.setFullscreen(this);
+        // Set ViewModel
+        viewModel = new ViewModelProvider(this).get(IntroductionViewModel.class);
 
-        setContentView(R.layout.natour_mainscreen_activity);
+        // Set Standard UI
+        NatourUIDesignHandler designHandler = new NatourUIDesignHandler();
+        designHandler.setFullscreen(this);
+
+        // Set Content View
+        setContentView(R.layout.natour_introduction_activity);
 
         // Find Views
-        moonImageView = findViewById(R.id.mainScreenMoonImageView);
-        earthImageView = findViewById(R.id.mainScreenEarthImageView);
-        natourTextView = (TextView) findViewById(R.id.mainScreenNatourTextView);
-        signInButton = (Button) findViewById(R.id.mainScreenStartButton);
-        planetLayout = (ConstraintLayout) findViewById(R.id.mainScreenPlanetLayout);
+        moonImageView = findViewById(R.id.introductionMoonImageView);
+        earthImageView = findViewById(R.id.introductionEarthImageView);
+        natourTextView = (TextView) findViewById(R.id.introductionNatourTextView);
+        signInButton = (Button) findViewById(R.id.introductionStartButton);
+        planetLayout = (ConstraintLayout) findViewById(R.id.introductionPlanetLayout);
 
         // Start Anims
         moonAnimation = (AnimatedVectorDrawable) moonImageView.getDrawable();
         moonAnimation.start();
         earthAnimation = (AnimatedVectorDrawable) earthImageView.getDrawable();
         earthAnimation.start();
-        natourTextView.startAnimation((Animation) AnimationUtils.loadAnimation(MainScreenActivity.this, R.anim.up_smooth_in));
-        signInButton.startAnimation((Animation) AnimationUtils.loadAnimation(MainScreenActivity.this, R.anim.up_smooth_in_slow));
-        planetLayout.startAnimation((Animation) AnimationUtils.loadAnimation(MainScreenActivity.this, R.anim.up_smooth_in_slower));
+        natourTextView.startAnimation((Animation) AnimationUtils.loadAnimation(IntroductionActivity.this, R.anim.up_smooth_in));
+        signInButton.startAnimation((Animation) AnimationUtils.loadAnimation(IntroductionActivity.this, R.anim.up_smooth_in_slow));
+        planetLayout.startAnimation((Animation) AnimationUtils.loadAnimation(IntroductionActivity.this, R.anim.up_smooth_in_slower));
 
         // Set Gradients
-        designHelper.setTextGradient(natourTextView);
-        designHelper.setTextGradient(signInButton);
+        designHandler.setTextGradient(natourTextView);
+        designHandler.setTextGradient(signInButton);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent switchActivityIntent = new Intent(MainScreenActivity.this, AuthenticationActivity.class);
+                Intent switchActivityIntent = new Intent(IntroductionActivity.this, AuthenticationActivity.class);
                 startActivity(switchActivityIntent);
+                finish();
             }
         });
-
-        MainScreenViewModel viewModel = new ViewModelProvider(this).get(MainScreenViewModel.class);
 
         /*
         Amplify.Auth.fetchAuthSession(
@@ -133,6 +138,7 @@ public class MainScreenActivity extends AppCompatActivity {
          */
     }
 
+    /*
     @Override
     protected void onPause() {
         super.onPause();
@@ -146,5 +152,6 @@ public class MainScreenActivity extends AppCompatActivity {
         earthAnimation.start();
         moonAnimation.start();
     }
+     */
 
 }

@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import androidx.core.view.WindowCompat;
 
-public class NatourUIDesignHelper {
+public class NatourUIDesignHandler {
 
-    public NatourUIDesignHelper() {
+    public NatourUIDesignHandler() {
         super();
     }
 

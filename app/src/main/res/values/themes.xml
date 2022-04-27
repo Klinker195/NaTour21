@@ -6,4 +6,15 @@
         <!-- Customize your theme here. -->
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
+    <style name="MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+
+        <!-- Buttons -->
+        <item name="buttonBarPositiveButtonStyle">@style/TextButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/TextButton</item>
+    </style>
+    <style name="TextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/edit_text_color</item>
+        <item name="android:backgroundTint">@color/edit_text_color</item>
+    </style>
 </resources>
