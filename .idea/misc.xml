@@ -28,6 +28,7 @@
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_authentication.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_forced_reset_password.xml" value="0.1611842105263158" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_google_login_failure.xml" value="0.12861842105263158" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_google_login_success.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_main.xml" value="0.67" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_registration_form.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_reset_password.xml" value="0.2" />

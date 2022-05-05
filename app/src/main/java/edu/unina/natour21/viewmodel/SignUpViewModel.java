@@ -19,6 +19,15 @@ public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<AuthException> onSignUpFailure = new MutableLiveData<>();
     private final MutableLiveData<AuthSignUpResult> onSignUpSuccess = new MutableLiveData<>();
 
+    public void signOut() {
+        Amplify.Auth.fetchAuthSession(
+                success -> { if(success.isSignedIn()) Amplify.Auth.signOut(
+                        () -> Log.i("AmplifySignOut", "Sign out success"),
+                        error -> Log.e("AmplifySignOut", error.toString())
+                ); },
+                error -> Log.e("AmplifyFetchAuth", error.toString())
+        );
+    }
 
     public boolean checkEmailFieldValidity(String email) {
         boolean check = false;

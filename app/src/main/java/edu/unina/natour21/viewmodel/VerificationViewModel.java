@@ -21,7 +21,15 @@ public class VerificationViewModel extends ViewModel {
     private final MutableLiveData<AuthSignUpResult> onResendCodeSuccess = new MutableLiveData<>();
     private final MutableLiveData<AuthException> onResendCodeFailure = new MutableLiveData<>();
 
-
+    public void signOut() {
+        Amplify.Auth.fetchAuthSession(
+                success -> { if(success.isSignedIn()) Amplify.Auth.signOut(
+                        () -> Log.i("AmplifySignOut", "Sign out success"),
+                        error -> Log.e("AmplifySignOut", error.toString())
+                ); },
+                error -> Log.e("AmplifyFetchAuth", error.toString())
+        );
+    }
 
     public void startCodeTimer(long currentMillis) {
 

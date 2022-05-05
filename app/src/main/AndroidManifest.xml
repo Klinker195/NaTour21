@@ -2,16 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.unina.natour21">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
 
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
-
             <data android:scheme="https" />
         </intent>
         <intent>
-            <action android:name="android.support.customtabs.action.CustomTabsService" />
+            <action android:name=
+                "android.support.customtabs.action.CustomTabsService" />
         </intent>
     </queries>
 
@@ -53,32 +55,34 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="natour" />
             </intent-filter>
         </activity>
 
-
         <activity
             android:name=".view.activity.RegistrationFormActivity"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".view.activity.VerificationActivity"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".view.activity.SignUpActivity"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".view.activity.ResetPasswordActivity"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".view.activity.AuthenticationActivity"
-            android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustPan" >
+            <intent-filter>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".view.activity.IntroductionActivity"
             android:exported="true"

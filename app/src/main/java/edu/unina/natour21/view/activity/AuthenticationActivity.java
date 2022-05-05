@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.amplifyframework.auth.AuthException;
 import com.amplifyframework.auth.AuthProvider;
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin;
+import com.amplifyframework.auth.options.AuthSignOutOptions;
 import com.amplifyframework.auth.result.AuthResetPasswordResult;
 import com.amplifyframework.auth.result.AuthSignInResult;
 import com.amplifyframework.auth.result.step.AuthSignInStep;
@@ -70,7 +71,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         designHandler.setTextGradient(forgotPasswordTextView);
 
         // Amplify Sign Out
-        viewModel.signOut();
+        // viewModel.signOut();
 
         // Set Button Listeners
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -92,10 +93,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         signInWithGoogleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Amplify.Auth.signInWithSocialWebUI(AuthProvider.google(), AuthenticationActivity.this,
-                        result -> Log.i("AuthQuickstart", result.toString()),
-                        error -> Log.e("AuthQuickstart", error.toString())
-                );
+                viewModel.googleSignIn(AuthenticationActivity.this);
             }
         });
 
@@ -120,6 +118,13 @@ public class AuthenticationActivity extends AppCompatActivity {
                     errorTextView.setVisibility(View.VISIBLE);
                     errorTextView.setText("Email is incorrect.");
                 }
+            }
+        });
+
+        signInTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.signOut();
             }
         });
 
@@ -154,6 +159,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                     }
                 } else if(signInStep == AuthSignInStep.DONE) {
                     // TODO Start main app (dashboard)
+                    Log.i("AmplifyLogin", Amplify.Auth.getCurrentUser().toString());
                 } else {
                     viewModel.onLoginError(new AuthException("Generic issue", "Try again."));
                 }
@@ -207,6 +213,13 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Amplify.Auth.handleWebUISignInResponse(intent);
+    }
+
+    /*
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -214,5 +227,6 @@ public class AuthenticationActivity extends AppCompatActivity {
             Amplify.Auth.handleWebUISignInResponse(data);
         }
     }
-
+    */
 }
+

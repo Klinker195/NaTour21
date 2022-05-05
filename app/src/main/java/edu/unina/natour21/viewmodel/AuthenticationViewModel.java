@@ -1,18 +1,25 @@
 package edu.unina.natour21.viewmodel;
 
+import android.app.Activity;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amplifyframework.auth.AuthException;
+import com.amplifyframework.auth.AuthProvider;
+import com.amplifyframework.auth.options.AuthSignOutOptions;
+import com.amplifyframework.auth.options.AuthWebUISignInOptions;
 import com.amplifyframework.auth.result.AuthResetPasswordResult;
 import com.amplifyframework.auth.result.AuthSignInResult;
 import com.amplifyframework.core.Amplify;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import edu.unina.natour21.view.activity.AuthenticationActivity;
 
 public class AuthenticationViewModel extends ViewModel {
 
@@ -22,10 +29,12 @@ public class AuthenticationViewModel extends ViewModel {
     private final MutableLiveData<AuthException> onResetPasswordRequestError = new MutableLiveData<>();
 
     public void signOut() {
-        Amplify.Auth.signOut(
-                () -> Log.i("Amplify", "Sign out success"),
-                error -> Log.e("Amplify", error.toString())
+
+        if(Amplify.Auth.getCurrentUser() != null) Amplify.Auth.signOut(
+                () -> Log.i("AmplifySignOut", "Sign out success"),
+                error -> Log.e("AmplifySignOut", error.toString())
         );
+
     }
 
     public void signIn(String email, String password) {
@@ -34,6 +43,13 @@ public class AuthenticationViewModel extends ViewModel {
                 password,
                 AuthenticationViewModel.this::onLoginSuccess,
                 AuthenticationViewModel.this::onLoginError
+        );
+    }
+
+    public void googleSignIn(Activity activity) {
+        Amplify.Auth.signInWithSocialWebUI(AuthProvider.google(), activity,
+                result -> Log.i("AmplifyGoogleViewModel", result.toString()),
+                error -> Log.e("AmplifyGoogleViewModel", error.toString())
         );
     }
 
