@@ -3,14 +3,18 @@ package edu.unina.natour21.dto;
 import java.io.Serializable;
 import java.util.LinkedList;
 
+import edu.unina.natour21.model.User;
+
 public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = -1552640971990839394L;
 
-    private String uuid;
+    // private String uuid;
+    private String email;
+    private String name;
+    private String surname;
     private String nickname;
     private String propic;
-    private String email;
     private Boolean isAdmin;
     private Integer sex;
     private String birthdate;
@@ -23,9 +27,45 @@ public class UserDTO implements Serializable {
         super();
     }
 
-    public String getUuid() { return uuid; }
+    public UserDTO(User user) {
+        this.email = user.getEmail();
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.nickname = user.getNickname();
+        this.isAdmin = user.getAdmin();
+        this.sex = user.getSex();
+        this.birthdate = user.getBirthdate().toString();
+        this.height = user.getHeight();
+        this.weight = user.getWeight();
+    }
 
-    public void setUuid(String uuid) { this.uuid = uuid; }
+    // public String getUuid() { return uuid; }
+
+    // public void setUuid(String uuid) { this.uuid = uuid; }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
     public String getNickname() {
         return nickname;
@@ -41,14 +81,6 @@ public class UserDTO implements Serializable {
 
     public void setPropic(String propic) {
         this.propic = propic;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Boolean getIsAdmin() {

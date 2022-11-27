@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.unina.natour21.R;
+import edu.unina.natour21.application.NatourApplication;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
 import edu.unina.natour21.viewmodel.IntroductionViewModel;
 
@@ -33,6 +35,12 @@ public class IntroductionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(NatourApplication.getCurrentAmplifyUser() != null) {
+            Intent switchActivityIntent = new Intent(this, RouteExplorationActivity.class);
+            this.startActivity(switchActivityIntent);
+            finish();
+        }
 
         // Set ViewModel
         viewModel = new ViewModelProvider(this).get(IntroductionViewModel.class);
@@ -68,8 +76,8 @@ public class IntroductionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent switchActivityIntent = new Intent(IntroductionActivity.this, AuthenticationActivity.class);
-                startActivity(switchActivityIntent);
                 finish();
+                startActivity(switchActivityIntent);
             }
         });
 

@@ -20,9 +20,17 @@ import com.amplifyframework.auth.result.AuthSignUpResult;
 import org.jetbrains.annotations.NotNull;
 
 import edu.unina.natour21.R;
+import edu.unina.natour21.dto.PostDTO;
+import edu.unina.natour21.dto.UserDTO;
+import edu.unina.natour21.retrofit.AmazonAPI;
+import edu.unina.natour21.retrofit.IPostAPI;
+import edu.unina.natour21.retrofit.IUserAPI;
 import edu.unina.natour21.utility.AmplifyExceptionHandler;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
 import edu.unina.natour21.viewmodel.VerificationViewModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class VerificationActivity extends AppCompatActivity {
 
@@ -37,6 +45,8 @@ public class VerificationActivity extends AppCompatActivity {
     private NatourUIDesignHandler designHandler;
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor sharedPrefsEditor;
+
+    private IUserAPI userAPI;
 
     @NotNull
     private long currentMillis = 300000; // 300000
@@ -53,6 +63,9 @@ public class VerificationActivity extends AppCompatActivity {
         if(extras != null) {
             email = extras.getString("email");
         }
+
+        // Retrofit API declaration
+        userAPI = AmazonAPI.getClient().create(IUserAPI.class);
 
         // Set View Model
         viewModel = new ViewModelProvider(this).get(VerificationViewModel.class);
@@ -140,13 +153,34 @@ public class VerificationActivity extends AppCompatActivity {
         viewModel.getOnSignUpConfirmationSuccess().observe(this, new Observer<AuthSignUpResult>() {
             @Override
             public void onChanged(AuthSignUpResult authSignUpResult) {
-                // Go to registration form
-                Intent switchActivityIntent = new Intent(VerificationActivity.this, RegistrationFormActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("email", email.replace(" ", "").toLowerCase());
-                switchActivityIntent.putExtras(bundle);
-                startActivity(switchActivityIntent);
-                finish();
+                // TODO: If there aren't infos about user, go to registration form activity
+                Call<UserDTO> call = userAPI.getUserByEmail(authSignUpResult.getUser().getUsername().replace(" ", "").toLowerCase());
+                call.enqueue(new Callback<UserDTO>() {
+                    @Override
+                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                        UserDTO userDTO = response.body();
+
+                        if(userDTO == null) {
+                            Intent switchActivityIntent = new Intent(VerificationActivity.this, RegistrationFormActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("email", email.replace(" ", "").toLowerCase());
+                            switchActivityIntent.putExtras(bundle);
+                            startActivity(switchActivityIntent);
+                            finish();
+                        }
+
+                        // TODO: Go to dashboard
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserDTO> call, Throwable t) {
+                        Log.e("AmazonAPI", "Request failed");
+                        Intent switchActivityIntent = new Intent(VerificationActivity.this, AuthenticationActivity.class);
+                        startActivity(switchActivityIntent);
+                        viewModel.signOut();
+                        finish();
+                    }
+                });
             }
         });
 

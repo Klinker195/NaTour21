@@ -2,6 +2,9 @@ package edu.unina.natour21.dto;
 
 import java.io.Serializable;
 
+import edu.unina.natour21.model.Post;
+import edu.unina.natour21.model.Report;
+
 public class ReportDTO implements Serializable {
 
     private static final long serialVersionUID = -3952663520058874494L;

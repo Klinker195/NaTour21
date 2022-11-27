@@ -53,24 +53,42 @@
             tools:visibility="invisible" />
 
         <TextView
-            android:id="@+id/registrationFormResetPasswordTextView"
+            android:id="@+id/registrationFormRegistrationFormTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="48dp"
             android:fontFamily="@font/redhattext_medium"
             android:singleLine="false"
             android:text="Registration\nForm"
             android:textAlignment="textEnd"
             android:textSize="48sp"
-            app:layout_constraintEnd_toEndOf="@+id/registrationFormEditTextPassword"
+            app:layout_constraintEnd_toEndOf="@+id/registrationFormEditTextNickname"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/registrationFormPasswordTextView"
+            android:id="@+id/registrationFormNicknameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginBottom="5dp"
+            android:elevation="22dp"
+            android:fontFamily="@font/redhattext_semi_bold"
+            android:shadowColor="@color/black_30alpha"
+            android:shadowDy="8"
+            android:shadowRadius="10"
+            android:text="Nickname"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/registrationFormEditTextNickname"
+            app:layout_constraintStart_toStartOf="@+id/registrationFormEditTextNickname" />
+
+        <TextView
+            android:id="@+id/registrationFormNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="5dp"
+            android:elevation="22dp"
             android:fontFamily="@font/redhattext_semi_bold"
             android:shadowColor="@color/black_30alpha"
             android:shadowDy="8"
@@ -78,15 +96,16 @@
             android:text="Name"
             android:textColor="@color/white"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/registrationFormEditTextPassword"
-            app:layout_constraintStart_toStartOf="@+id/registrationFormEditTextPassword" />
+            app:layout_constraintBottom_toTopOf="@+id/registrationFormEditTextName"
+            app:layout_constraintStart_toStartOf="@+id/registrationFormEditTextName" />
 
         <TextView
-            android:id="@+id/registrationFormPasswordTextView3"
+            android:id="@+id/registrationFormSurnameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginBottom="5dp"
+            android:elevation="22dp"
             android:fontFamily="@font/redhattext_semi_bold"
             android:shadowColor="@color/black_30alpha"
             android:shadowDy="8"
@@ -94,14 +113,14 @@
             android:text="Surname"
             android:textColor="@color/white"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/registrationFormEditTextPassword2"
-            app:layout_constraintStart_toStartOf="@+id/registrationFormEditTextPassword2" />
+            app:layout_constraintBottom_toTopOf="@+id/registrationFormEditTextSurname"
+            app:layout_constraintStart_toStartOf="@+id/registrationFormEditTextSurname" />
 
         <EditText
-            android:id="@+id/registrationFormEditTextPassword"
+            android:id="@+id/registrationFormEditTextNickname"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/natour_components_edittext_background"
             android:elevation="20dp"
             android:ems="10"
@@ -113,14 +132,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/registrationFormResetPasswordTextView"
+            app:layout_constraintTop_toBottomOf="@+id/registrationFormRegistrationFormTextView"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <EditText
-            android:id="@+id/registrationFormEditTextPassword2"
+            android:id="@+id/registrationFormEditTextSurname"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="48dp"
             android:background="@drawable/natour_components_edittext_background"
             android:elevation="20dp"
             android:ems="10"
@@ -132,7 +151,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/registrationFormEditTextPassword"
+            app:layout_constraintTop_toBottomOf="@+id/registrationFormEditTextName"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <EditText
+            android:id="@+id/registrationFormEditTextName"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/natour_components_edittext_background"
+            android:elevation="20dp"
+            android:ems="10"
+            android:fontFamily="@font/redhattext_regular"
+            android:inputType="text"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="@color/edit_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/registrationFormEditTextNickname"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
@@ -170,6 +208,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginBottom="5dp"
+            android:elevation="22dp"
             android:fontFamily="@font/redhattext_semi_bold"
             android:shadowColor="@color/black_30alpha"
             android:shadowDy="8"
@@ -204,8 +243,8 @@
             app:iconGravity="textEnd"
             app:iconSize="20dp"
             app:iconTintMode="multiply"
-            app:layout_constraintStart_toStartOf="@+id/registrationFormEditTextPassword2"
-            app:layout_constraintTop_toBottomOf="@+id/registrationFormEditTextPassword2"
+            app:layout_constraintStart_toStartOf="@+id/registrationFormEditTextSurname"
+            app:layout_constraintTop_toBottomOf="@+id/registrationFormEditTextSurname"
             app:rippleColor="@color/green_signin_icon"
             app:strokeColor="#DFDFDF"
             app:strokeWidth="0.5dp" />
@@ -216,6 +255,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginBottom="5dp"
+            android:elevation="22dp"
             android:fontFamily="@font/redhattext_semi_bold"
             android:shadowColor="@color/black_30alpha"
             android:shadowDy="8"
@@ -256,6 +296,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginBottom="5dp"
+            android:elevation="22dp"
             android:fontFamily="@font/redhattext_semi_bold"
             android:shadowColor="@color/black_30alpha"
             android:shadowDy="8"
@@ -298,6 +339,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginBottom="4dp"
+            android:elevation="22dp"
             android:fontFamily="@font/redhattext_semi_bold"
             android:shadowColor="@color/black_30alpha"
             android:shadowDy="8"

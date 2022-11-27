@@ -1,7 +1,10 @@
 package edu.unina.natour21.dto;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.LinkedList;
+
+import edu.unina.natour21.model.Post;
 
 public class PostDTO implements Serializable {
 
@@ -15,14 +18,34 @@ public class PostDTO implements Serializable {
     private Integer duration;
     private Integer difficulty;
     private String route;
+    private Double startLat;
+    private Double startLng;
     private LinkedList<String> pics;
-    private Integer ups;
-    private Integer downs;
     private Boolean isReported;
+    private Float rate;
     private UserDTO author;
+    // private LinkedList<ReviewDTO> reviews;
 
     public PostDTO() {
         super();
+    }
+
+    public PostDTO(Post post) {
+        super();
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.description = post.getDescription();
+        this.timestamp = post.getTimestamp().toString();
+        this.accessibility = post.getAccessibility();
+        this.duration = post.getDuration();
+        this.difficulty = post.getDifficulty();
+        // this.route = post.getRoute();
+        this.startLat = post.getStartLat();
+        this.startLng = post.getStartLng();
+        // this.pics = post.getPics();
+        this.isReported = post.getReported();
+        this.rate = post.getRate();
+        // this.author = post.getAuthor();
     }
 
     public Long getId() {
@@ -89,28 +112,28 @@ public class PostDTO implements Serializable {
         this.route = route;
     }
 
+    public Double getStartLat() {
+        return startLat;
+    }
+
+    public void setStartLat(Double startLat) {
+        this.startLat = startLat;
+    }
+
+    public Double getStartLng() {
+        return startLng;
+    }
+
+    public void setStartLng(Double startLng) {
+        this.startLng = startLng;
+    }
+
     public LinkedList<String> getPics() {
         return pics;
     }
 
     public void setPics(LinkedList<String> pics) {
         this.pics = pics;
-    }
-
-    public Integer getUps() {
-        return ups;
-    }
-
-    public void setUps(Integer ups) {
-        this.ups = ups;
-    }
-
-    public Integer getDowns() {
-        return downs;
-    }
-
-    public void setDowns(Integer downs) {
-        this.downs = downs;
     }
 
     public Boolean getIsReported() {
@@ -128,6 +151,32 @@ public class PostDTO implements Serializable {
     public void setAuthor(UserDTO author) {
         this.author = author;
     }
+
+    public Boolean getReported() {
+        return isReported;
+    }
+
+    public void setReported(Boolean reported) {
+        isReported = reported;
+    }
+
+    public Float getRate() {
+        return rate;
+    }
+
+    public void setRate(Float rate) {
+        this.rate = rate;
+    }
+
+    /*
+    public LinkedList<ReviewDTO> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(LinkedList<ReviewDTO> reviews) {
+        this.reviews = reviews;
+    }
+    */
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

@@ -6,6 +6,15 @@ buildscript {
         maven {
             url "https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/public/"
         }
+        maven {
+            url 'https://.jitpack.io/'
+        }
+        maven {
+            url 'https://repository.jboss.org/nexus/content/repositories/public/'
+        }
+        maven {
+            url 'https://repo.spring.io/plugins-release/'
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.2"

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/popupRouteFilteringBackButtonImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/natour_circle_back_button" />
+
+    <TextView
+        android:id="@+id/popupRouteFilteringDifficultyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:text="Difficulty"
+        android:textColor="@color/teal_700"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringBackButtonImageView"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringBackButtonImageView" />
+
+    <LinearLayout
+        android:id="@+id/popupRouteFilteringDifficultyLinearLayout"
+        android:layout_width="190dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="16dp"
+        android:gravity="left"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringDifficultyTextView"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringDifficultyTextView">
+
+        <ImageView
+            android:id="@+id/popupRouteFilteringDifficultyDot1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="1dp"
+            app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+            tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+        <ImageView
+            android:id="@+id/popupRouteFilteringDifficultyDot2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="1dp"
+            app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+            tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+        <ImageView
+            android:id="@+id/popupRouteFilteringDifficultyDot3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="1dp"
+            app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+            tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+        <ImageView
+            android:id="@+id/popupRouteFilteringDifficultyDot4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="1dp"
+            app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+            tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+        <ImageView
+            android:id="@+id/popupRouteFilteringDifficultyDot5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="1dp"
+            app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+            tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/popupRouteFilteringDurationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:text="Duration"
+        android:textColor="@color/teal_700"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringDifficultyTextView"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringDifficultyLinearLayout" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/popupRouteFilteringDurationSlider"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-14dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="2dp"
+        android:stepSize="5"
+        android:value="0"
+        android:valueFrom="0"
+        android:valueTo="360"
+        app:haloColor="@color/teal_700"
+        app:labelBehavior="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringDurationTextView"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringDurationTextView"
+        app:thumbColor="@color/teal_700"
+        app:tickColorActive="@color/teal_700"
+        app:tickColorInactive="@color/lightblue_nav_icon_ripple"
+        app:trackColorActive="@color/teal_700"
+        app:trackColorInactive="@color/lightblue_nav_icon_ripple" />
+
+    <TextView
+        android:id="@+id/popupRouteFilteringDurationSliderValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:text="Not selected"
+        android:textColor="@color/lightgrey_text"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringDurationSlider"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringDurationSlider" />
+
+    <TextView
+        android:id="@+id/popupRouteFilteringGeographicAreaTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:text="Geographic Area"
+        android:textColor="@color/teal_700"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringDurationTextView"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringDurationSliderValueTextView" />
+
+    <Button
+        android:id="@+id/popupRouteFilteringGeographicAreaButton"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/natour_pinpoint_icon"
+        android:elevation="20dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:text="Tap to set geographic area"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/lightgrey_text"
+        android:textSize="16sp"
+        app:cornerRadius="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringGeographicAreaTextView"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringGeographicAreaTextView"
+        app:strokeColor="@color/lightgrey_text"
+        app:strokeWidth="0.5dp" />
+
+    <TextView
+        android:id="@+id/popupRouteFilteringAccessibilityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:text="Accessibility"
+        android:textColor="@color/teal_700"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringGeographicAreaButton"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringGeographicAreaButton" />
+
+    <CheckBox
+        android:id="@+id/popupRouteFilteringAccessibilityCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:buttonTint="@color/teal_700"
+        android:checked="false"
+        app:layout_constraintBottom_toBottomOf="@+id/popupRouteFilteringAccessibilityTextView"
+        app:layout_constraintStart_toEndOf="@+id/popupRouteFilteringAccessibilityTextView"
+        app:layout_constraintTop_toTopOf="@+id/popupRouteFilteringAccessibilityTextView" />
+
+    <ImageView
+        android:id="@+id/popupRouteFilteringImageViewClearButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/popupRouteFilteringAccessibilityTextView"
+        app:layout_constraintTop_toBottomOf="@+id/popupRouteFilteringAccessibilityTextView"
+        app:srcCompat="@drawable/natour_clear_button" />
+
+    <ImageView
+        android:id="@+id/popupRouteFilteringImageViewDoneButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/popupRouteFilteringGeographicAreaButton"
+        app:layout_constraintTop_toTopOf="@+id/popupRouteFilteringImageViewClearButton"
+        app:srcCompat="@drawable/natour_done_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentRouteSearchConstraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.fragment.RouteSearchFragment" >
+
+    <TextView
+        android:id="@+id/fragmentRouteSearchUserFilterTextViewButton"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/natour_half_gradient_button_background_left"
+        android:elevation="20dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:gravity="center"
+        android:hapticFeedbackEnabled="false"
+        android:text="Users"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/fragmentRouteSearchEditText"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentRouteSearchEditText" />
+
+    <TextView
+        android:id="@+id/fragmentRouteSearchRoutesFilterTextViewButton"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/natour_half_button_background_right"
+        android:elevation="20dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:gravity="center"
+        android:hapticFeedbackEnabled="false"
+        android:text="Routes"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/fragmentRouteSearchUserFilterTextViewButton"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentRouteSearchEditText" />
+
+    <TextView
+        android:id="@+id/fragmentRouteSearchFilterByTextViewButton"
+        android:layout_width="93dp"
+        android:layout_height="0dp"
+        android:background="@drawable/natour_button_background"
+        android:elevation="20dp"
+        android:fontFamily="@font/redhattext_medium"
+        android:gravity="center"
+        android:hapticFeedbackEnabled="false"
+        android:text="Filter by"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentRouteSearchRoutesFilterTextViewButton"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentRouteSearchEditText"
+        app:layout_constraintTop_toTopOf="@+id/fragmentRouteSearchRoutesFilterTextViewButton" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragmentRouteSearchBackgroundConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/fragmentRouteSearchBackgroundImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/total_background_forest"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/fragmentRouteSearchEditText"
+        android:layout_width="360dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/natour_components_edittext_background"
+        android:elevation="20dp"
+        android:ems="10"
+        android:enabled="true"
+        android:fontFamily="@font/redhattext_semi_bold"
+        android:inputType="text"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textAlignment="textStart"
+        android:textColor="@color/edit_text_color"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck"
+        />
+
+    <ImageView
+        android:id="@+id/fragmentRouteSearchImageViewButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="300dp"
+        android:src="@drawable/natour_search_button_icon"
+        android:translationZ="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentRouteSearchEditText"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentRouteSearchEditText"
+        app:layout_constraintStart_toStartOf="@+id/fragmentRouteSearchEditText"
+        app:layout_constraintTop_toTopOf="@+id/fragmentRouteSearchEditText" />
+
+    <ImageView
+        android:id="@+id/fragmentRouteSearchWhiteBarImageView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/natour_route_search_background_line"
+        android:translationY="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentRouteSearchUserFilterTextViewButton" />
+
+    <ImageView
+        android:id="@+id/fragmentRouteSearchWhiteBackgroundBlurImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/natour_route_search_background_blur"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentRouteSearchBackgroundConstraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/fragmentRouteSearchBackgroundConstraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentRouteSearchWhiteBarImageView" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragmentRouteSearchWhiteBarImageView">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragmentRouteSearchRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
+            android:clipToPadding="false"
+            android:elevation="10dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:scrollbars="vertical">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

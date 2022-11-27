@@ -8,21 +8,72 @@
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/animator_natour_signin_earth.xml" value="0.22135416666666666" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/animator_natour_signin_moon.xml" value="0.3828125" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3828125" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.1424342105263158" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour21_authentication_title.xml" value="0.3828125" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_add_fav_clear_icon.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_add_fav_filled_icon.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_add_file_icon.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_arrow_down_icon.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_arrow_left.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_authentication_backgroundgradient.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_black_gradient.xml" value="0.12434210526315789" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_black_gradient_reverse.xml" value="0.12434210526315789" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_button_background.xml" value="0.19078947368421054" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_button_white_background.xml" value="0.18980263157894736" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_calendar_icon.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_cancel_button.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_circle_back_button.xml" value="0.18585526315789475" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_clear_button.xml" value="0.18585526315789475" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_community_icon.xml" value="0.17894736842105263" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_component_edittext_background.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_components_edittext_background.xml" value="0.19210526315789472" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_components_edittext_background_2.xml" value="0.1930921052631579" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_components_edittext_background_ripple.xml" value="0.1424342105263158" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_difficulty_dot.xml" value="0.1730263157894737" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_difficulty_filter_circle.xml" value="0.18585526315789475" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_difficulty_filter_circle_disabled.xml" value="0.18585526315789475" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_done_button.xml" value="0.18585526315789475" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_done_button_disabled.xml" value="0.17598684210526316" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_done_button_enabled.xml" value="0.17598684210526316" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_dummy_bg.xml" value="0.1424342105263158" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_follow_button.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_gradient_button_background.xml" value="0.16348684210526315" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_gradient_mark.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_half_button_background_left.xml" value="0.19078947368421054" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_half_button_background_right.xml" value="0.19078947368421054" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_half_gradient_button_background.xml" value="0.19078947368421054" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_half_gradient_button_background_left.xml" value="0.18980263157894736" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_half_gradient_button_background_right.xml" value="0.19078947368421054" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_handicap_icon.xml" value="0.1730263157894737" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_image_selection_icon.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_line_path_icon.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_mainscreen_earth.xml" value="0.13980263157894737" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_mainscreen_google_icon.xml" value="0.13980263157894737" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_mainscreen_moon.xml" value="0.13980263157894737" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_new_post_button.xml" value="0.18980263157894736" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_people_icon.xml" value="0.17894736842105263" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_person_icon.xml" value="0.18980263157894736" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_pinpoint_icon.xml" value="0.18585526315789475" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_post_creation_field_plate.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_post_details_background.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_post_details_divider_line.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_post_edit_icon.xml" value="0.13980263157894737" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_rate_leaf.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_report_icon.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_route_search_background_blur.xml" value="0.12039473684210526" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_route_search_background_blur_old.xml" value="0.18980263157894736" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_route_search_background_line.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_search_button_icon.xml" value="0.1424342105263158" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_search_icon.xml" value="0.17894736842105263" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_search_icon_gradient.xml" value="0.1424342105263158" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_signin_backgroundgradient.xml" value="0.3828125" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_signin_earth.xml" value="0.3828125" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_signin_google_icon.xml" value="0.3828125" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_signin_moon.xml" value="0.3828125" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_signin_planet.xml" value="0.3828125" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_stronger_black_gradient_reverse.xml" value="0.13980263157894737" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_user_propic_post_card_ellipse.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_white_circle.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/spinnerbg.xml" value="0.13980263157894737" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/font/red_hat_text.xml" value="0.396875" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_authentication.xml" value="0.22" />
@@ -30,19 +81,77 @@
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_google_login_failure.xml" value="0.12861842105263158" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_google_login_success.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_main.xml" value="0.67" />
-        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_registration_form.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_creation.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_creation_maps.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_details.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_filtering_maps.xml" value="0.14605263157894738" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_registration_form.xml" value="0.18" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_reset_password.xml" value="0.2" />
-        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_route_exploration.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_sign_up.xml" value="0.18" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_sign_up_first_step.xml" value="0.18" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_verification.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/cards_layout.xml" value="0.75" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/custom_calendar_dialog.xml" value="0.1394736842105263" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/custom_spinner_dropdown.xml" value="0.12960526315789472" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/custom_spinner_dropdown_item.xml" value="0.1805921052631579" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/fragment_route_exploration.xml" value="0.462853385930309" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/fragment_route_search.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/natour_introduction_activity.xml" value="0.15949453551912568" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/natour_mainscreen_activity.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/natour_signin_activity.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_loading.xml" value="0.12" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_post_report.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_post_update.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_route_filtering.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/user_cards_layout.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/menu/nav_menu.xml" value="0.16875" />
         <entry key="..\:/Users/gianl/AppData/Local/SDK/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.1825657894736842" />
       </map>
+    </option>
+  </component>
+  <component name="NullableNotNullManager">
+    <option name="myDefaultNullable" value="androidx.annotation.Nullable" />
+    <option name="myDefaultNotNull" value="androidx.annotation.NonNull" />
+    <option name="myNullables">
+      <value>
+        <list size="14">
+          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
+          <item index="1" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
+          <item index="2" class="java.lang.String" itemvalue="android.support.annotation.Nullable" />
+          <item index="3" class="java.lang.String" itemvalue="androidx.annotation.Nullable" />
+          <item index="4" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNullable" />
+          <item index="5" class="java.lang.String" itemvalue="com.android.annotations.Nullable" />
+          <item index="6" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
+          <item index="7" class="java.lang.String" itemvalue="javax.annotation.CheckForNull" />
+          <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.Nullable" />
+          <item index="9" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableDecl" />
+          <item index="10" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableType" />
+          <item index="11" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.Nullable" />
+          <item index="12" class="java.lang.String" itemvalue="io.reactivex.annotations.Nullable" />
+          <item index="13" class="java.lang.String" itemvalue="io.reactivex.rxjava3.annotations.Nullable" />
+        </list>
+      </value>
+    </option>
+    <option name="myNotNulls">
+      <value>
+        <list size="14">
+          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
+          <item index="1" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
+          <item index="2" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
+          <item index="3" class="java.lang.String" itemvalue="androidx.annotation.NonNull" />
+          <item index="4" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNonNull" />
+          <item index="5" class="java.lang.String" itemvalue="com.android.annotations.NonNull" />
+          <item index="6" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
+          <item index="7" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.NonNull" />
+          <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullDecl" />
+          <item index="9" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullType" />
+          <item index="10" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.NonNull" />
+          <item index="11" class="java.lang.String" itemvalue="io.reactivex.annotations.NonNull" />
+          <item index="12" class="java.lang.String" itemvalue="io.reactivex.rxjava3.annotations.NonNull" />
+          <item index="13" class="java.lang.String" itemvalue="lombok.NonNull" />
+        </list>
+      </value>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">

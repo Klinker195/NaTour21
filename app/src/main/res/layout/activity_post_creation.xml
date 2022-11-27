@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/postCreationConstraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:rotationY="0"
+    tools:context=".view.activity.PostCreationActivity">
+
+    <ImageView
+        android:id="@+id/postCreationBackgroundImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/total_background_forest"
+        android:tintMode="screen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/postCreationTopConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="105dp"
+        android:background="@color/white"
+        android:elevation="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/postCreationNatourTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/redhattext_medium"
+            android:text="NaTour\u00B2\u00B9"
+            android:textSize="30sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/postCreationBackButtonImageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/natour_arrow_left" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/postCreationMidConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:isScrollContainer="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postCreationTopConstraintLayout">
+
+        <ScrollView
+            android:id="@+id/postCreationScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:isScrollContainer="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/postCreationLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:isScrollContainer="false"
+                android:orientation="vertical"
+                android:paddingBottom="30dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/postCreationRouteNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:text="Route Name"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationRouteNamePlateImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationRouteNamePlateImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationRouteNamePlateImageView"
+                        app:layout_constraintTop_toTopOf="@+id/postCreationRouteNamePlateImageView" />
+
+                    <ImageView
+                        android:id="@+id/postCreationRouteNamePlateImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/natour_post_creation_field_plate" />
+
+                    <EditText
+                        android:id="@+id/postCreationRouteNameEditText"
+                        android:layout_width="300dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/natour_components_edittext_background"
+                        android:elevation="20dp"
+                        android:ems="10"
+                        android:fontFamily="@font/redhattext_regular"
+                        android:inputType="text"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:textColor="@color/edit_text_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.504"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationRouteNamePlateImageView"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/postCreationDescriptionTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:text="Description"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationDescriptionPlateImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationDescriptionPlateImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationDescriptionPlateImageView"
+                        app:layout_constraintTop_toTopOf="@+id/postCreationDescriptionPlateImageView"
+                        app:layout_constraintVertical_bias="0.055" />
+
+                    <TextView
+                        android:id="@+id/postCreationDescriptionOptionalTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_italic"
+                        android:text="Optional"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationDescriptionPlateImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationDescriptionTextView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationDescriptionTextView"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationDescriptionTextView"
+                        app:layout_constraintVertical_bias="0.055" />
+
+                    <ImageView
+                        android:id="@+id/postCreationDescriptionPlateImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/natour_post_creation_field_plate" />
+
+                    <EditText
+                        android:id="@+id/postCreationDescriptionEditText"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/natour_components_edittext_background"
+                        android:elevation="20dp"
+                        android:ems="10"
+                        android:fontFamily="@font/redhattext_regular"
+                        android:gravity="top"
+                        android:inputType="textLongMessage|textMultiLine|text"
+                        android:lines="18"
+                        android:maxLines="18"
+                        android:minLines="18"
+                        android:paddingStart="20dp"
+                        android:paddingTop="20dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="20dp"
+                        android:singleLine="false"
+                        android:textAlignment="viewStart"
+                        android:textColor="@color/edit_text_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.504"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationDescriptionPlateImageView"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/postCreationRouteTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:text="Route"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationRoutePathPlateImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationRoutePathPlateImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationRoutePathPlateImageView"
+                        app:layout_constraintTop_toTopOf="@+id/postCreationRoutePathPlateImageView" />
+
+                    <ImageView
+                        android:id="@+id/postCreationRoutePathPlateImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/natour_post_creation_field_plate" />
+
+                    <TextView
+                        android:id="@+id/postCreationRoutePathTextView"
+                        android:layout_width="300dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/natour_components_edittext_background"
+                        android:drawableLeft="@drawable/natour_line_path_icon"
+                        android:elevation="20dp"
+                        android:ems="10"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:gravity="center"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="Tap to trace route"
+                        android:textAlignment="center"
+                        android:textColor="@color/lightgrey_text"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.504"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationRoutePathPlateImageView" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/postCreationOrTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="20dp"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:shadowColor="@color/black_30alpha"
+                        android:shadowDy="8"
+                        android:shadowRadius="10"
+                        android:text="OR"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/postCreationImportGPXTapTextView"
+                        android:layout_width="300dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/natour_components_edittext_background"
+                        android:drawableLeft="@drawable/natour_add_file_icon"
+                        android:elevation="20dp"
+                        android:ems="10"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:gravity="center"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="Import GPX file"
+                        android:textAlignment="center"
+                        android:textColor="@color/lightgrey_text"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/postCreationPicturesOptionalTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_italic"
+                        android:text="Optional"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationPicturesPlateImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationPicturesTextView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationPicturesTextView"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationPicturesTextView" />
+
+                    <TextView
+                        android:id="@+id/postCreationPicturesTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:text="Picture"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationPicturesPlateImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationPicturesPlateImageView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/postCreationPicturesPlateImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/natour_post_creation_field_plate" />
+
+                    <TextView
+                        android:id="@+id/postCreationPicturesTapTextView"
+                        android:layout_width="300dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/natour_components_edittext_background"
+                        android:drawableLeft="@drawable/natour_image_selection_icon"
+                        android:elevation="20dp"
+                        android:ems="10"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:gravity="center"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="Select an image"
+                        android:textAlignment="center"
+                        android:textColor="@color/lightgrey_text"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationPicturesOptionalTextView" />
+
+                    <ImageView
+                        android:id="@+id/postCreationPicturesPreviewImageView"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:elevation="25dp"
+                        android:padding="30dp"
+                        android:scaleType="fitCenter"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationPicturesPreviewBackgroundImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationPicturesPreviewBackgroundImageView"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationPicturesPlateImageView"
+                        tools:srcCompat="@tools:sample/avatars"
+                        tools:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/postCreationPicturesPreviewBackgroundImageView"
+                        android:layout_width="300dp"
+                        android:layout_height="0dp"
+                        android:elevation="20dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationPicturesPreviewImageView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationPicturesPlateImageView"
+                        app:srcCompat="@drawable/natour_components_edittext_background"
+                        tools:srcCompat="@drawable/natour_components_edittext_background"
+                        tools:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/postCreationPicturesClearButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:backgroundTint="@color/white"
+                        android:backgroundTintMode="add"
+                        android:elevation="20dp"
+                        android:fontFamily="@font/redhattext_bold"
+                        android:hapticFeedbackEnabled="true"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:text="clear"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        app:cornerRadius="40.0dp"
+                        app:iconTintMode="multiply"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationPicturesPreviewBackgroundImageView"
+                        app:rippleColor="@color/green_signin_icon"
+                        app:strokeColor="#DFDFDF"
+                        app:strokeWidth="0.5dp"
+                        tools:visibility="gone" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <LinearLayout
+                        android:id="@+id/postCreationDifficultyLinearLayout"
+                        android:layout_width="190dp"
+                        android:layout_height="25dp"
+                        android:layout_marginStart="-8dp"
+                        android:elevation="25dp"
+                        android:gravity="left"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationDifficultyBoxImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationDifficultyBoxImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationDifficultyBoxImageView"
+                        app:layout_constraintTop_toTopOf="@+id/postCreationDifficultyBoxImageView">
+
+                        <ImageView
+                            android:id="@+id/postCreationDifficultyDot1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="1dp"
+                            app:srcCompat="@drawable/natour_difficulty_filter_circle"
+                            tools:srcCompat="@drawable/natour_difficulty_filter_circle" />
+
+                        <ImageView
+                            android:id="@+id/postCreationDifficultyDot2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="1dp"
+                            app:srcCompat="@drawable/natour_difficulty_filter_circle"
+                            tools:srcCompat="@drawable/natour_difficulty_filter_circle" />
+
+                        <ImageView
+                            android:id="@+id/postCreationDifficultyDot3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="1dp"
+                            app:srcCompat="@drawable/natour_difficulty_filter_circle"
+                            tools:srcCompat="@drawable/natour_difficulty_filter_circle" />
+
+                        <ImageView
+                            android:id="@+id/postCreationDifficultyDot4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="1dp"
+                            app:srcCompat="@drawable/natour_difficulty_filter_circle"
+                            tools:srcCompat="@drawable/natour_difficulty_filter_circle" />
+
+                        <ImageView
+                            android:id="@+id/postCreationDifficultyDot5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="1dp"
+                            app:srcCompat="@drawable/natour_difficulty_filter_circle"
+                            tools:srcCompat="@drawable/natour_difficulty_filter_circle" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/postCreationDifficultyTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:text="Difficulty"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationDifficultyPlateImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationDifficultyPlateImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationDifficultyPlateImageView"
+                        app:layout_constraintTop_toTopOf="@+id/postCreationDifficultyPlateImageView" />
+
+                    <ImageView
+                        android:id="@+id/postCreationDifficultyPlateImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/natour_post_creation_field_plate" />
+
+                    <ImageView
+                        android:id="@+id/postCreationDifficultyBoxImageView"
+                        android:layout_width="300dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/natour_components_edittext_background"
+                        android:elevation="20dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.504"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationDifficultyPlateImageView" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/postCreationDurationSlider"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="22dp"
+                        android:elevation="25dp"
+                        android:stepSize="5"
+                        android:value="30"
+                        android:valueFrom="5"
+                        android:valueTo="360"
+                        app:haloColor="#00018786"
+                        app:labelBehavior="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationDurationValueTextView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationDurationValueTextView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationDurationValueTextView"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationDurationPlateImageView"
+                        app:thumbColor="@color/teal_700"
+                        app:tickColorActive="@color/teal_700"
+                        app:tickColorInactive="@color/lightblue_nav_icon_ripple"
+                        app:trackColorActive="@color/teal_700"
+                        app:trackColorInactive="@color/lightblue_nav_icon_ripple" />
+
+                    <TextView
+                        android:id="@+id/postCreationDurationTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:text="Duration"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationDurationPlateImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationDurationPlateImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationDurationPlateImageView"
+                        app:layout_constraintTop_toTopOf="@+id/postCreationDurationPlateImageView" />
+
+                    <ImageView
+                        android:id="@+id/postCreationDurationPlateImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/natour_post_creation_field_plate" />
+
+                    <TextView
+                        android:id="@+id/postCreationDurationValueTextView"
+                        android:layout_width="300dp"
+                        android:layout_height="85dp"
+                        android:background="@drawable/natour_components_edittext_background"
+                        android:elevation="20dp"
+                        android:ems="10"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:gravity="bottom|center"
+                        android:inputType="text"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="5dp"
+                        android:text="30'"
+                        android:textColor="@color/edit_text_color"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.504"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationDurationPlateImageView" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/postCreationOtherSettingsTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="25dp"
+                        android:fontFamily="@font/redhattext_medium"
+                        android:text="Other settings"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationOtherSettingsPlateImageView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationOtherSettingsPlateImageView"
+                        app:layout_constraintStart_toStartOf="@+id/postCreationOtherSettingsPlateImageView"
+                        app:layout_constraintTop_toTopOf="@+id/postCreationOtherSettingsPlateImageView" />
+
+                    <ImageView
+                        android:id="@+id/postCreationOtherSettingsPlateImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/natour_post_creation_field_plate" />
+
+                    <TextView
+                        android:id="@+id/postCreationOtherSettingsBoxTextView"
+                        android:layout_width="300dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/natour_components_edittext_background"
+                        android:elevation="20dp"
+                        android:ems="10"
+                        android:fontFamily="@font/redhattext_regular"
+                        android:gravity="center|start"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="Accessibility"
+                        android:textColor="@color/edit_text_color"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.504"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/postCreationOtherSettingsPlateImageView" />
+
+                    <CheckBox
+                        android:id="@+id/postCreationOtherSettingsAccessibilityCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:buttonTint="@color/teal_700"
+                        android:elevation="25dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/postCreationOtherSettingsBoxTextView"
+                        app:layout_constraintEnd_toEndOf="@+id/postCreationOtherSettingsBoxTextView"
+                        app:layout_constraintTop_toTopOf="@+id/postCreationOtherSettingsBoxTextView" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp">
+
+                    <Button
+                        android:id="@+id/postCreationDoneButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:backgroundTint="@color/white"
+                        android:backgroundTintMode="add"
+                        android:elevation="20dp"
+                        android:fontFamily="@font/redhattext_bold"
+                        android:hapticFeedbackEnabled="true"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:text="done"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        app:cornerRadius="40.0dp"
+                        app:iconTintMode="multiply"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.496"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:rippleColor="@color/green_signin_icon"
+                        app:strokeColor="#DFDFDF"
+                        app:strokeWidth="0.5dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

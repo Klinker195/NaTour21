@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.utility.AmplifyExceptionHandler;
+import edu.unina.natour21.utility.KeyboardHandler;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
 import edu.unina.natour21.viewmodel.SignUpViewModel;
 
@@ -77,6 +78,8 @@ public class SignUpActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                KeyboardHandler.hideKeyboard(SignUpActivity.this);
+
                 String email = emailEditText.getText().toString();
                 email = email.replace(" ", "").toLowerCase();
                 emailEditText.setText(email);

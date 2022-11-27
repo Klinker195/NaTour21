@@ -2,6 +2,8 @@ package edu.unina.natour21.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Base64;
 
 import java.sql.Date;
@@ -10,12 +12,14 @@ import java.util.LinkedList;
 import edu.unina.natour21.dto.PostDTO;
 import edu.unina.natour21.dto.UserDTO;
 
-public class User {
+public class User implements Parcelable {
 
-    private final String uuid;
+    private final String email;
+    // private String uuid;
+    private String name;
+    private String surname;
     private String nickname;
     private Bitmap propic;
-    private String email;
     private Boolean isAdmin;
     private Integer sex;
     private Date birthdate;
@@ -25,8 +29,9 @@ public class User {
     private LinkedList<User> followedUsers;
 
     public User(UserDTO userDTO) {
-        this.uuid = userDTO.getUuid();
         this.nickname = userDTO.getNickname();
+        this.name = userDTO.getName();
+        this.surname = userDTO.getSurname();
         this.email = userDTO.getEmail();
         this.isAdmin = userDTO.getIsAdmin();
         this.sex = userDTO.getSex();
@@ -59,7 +64,51 @@ public class User {
 
     }
 
-    public String getUuid() { return uuid; }
+    // public String getUuid() { return uuid; }
+
+    protected User(Parcel in) {
+        this.email = in.readString();
+        this.name = in.readString();
+        this.surname = in.readString();
+        this.nickname = in.readString();
+        // this.propic = (Bitmap) in.readParcelable(Bitmap.class.getClassLoader());
+        if(in.readByte() == 0) {
+            this.isAdmin = false;
+        } else {
+            this.isAdmin = true;
+        }
+        this.sex = in.readInt();
+        this.height = in.readInt();
+        this.weight = in.readFloat();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
     public String getNickname() {
         return nickname;
@@ -81,9 +130,11 @@ public class User {
         return email;
     }
 
+    /*
     public void setEmail(String email) {
         this.email = email;
     }
+    */
 
     public Boolean getAdmin() {
         return isAdmin;
@@ -141,4 +192,25 @@ public class User {
         this.followedUsers = followedUsers;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(email);
+        dest.writeString(name);
+        dest.writeString(surname);
+        dest.writeString(nickname);
+        // dest.writeParcelable(propic, flags);
+        if(isAdmin == null || isAdmin == false) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+        }
+        dest.writeInt(sex);
+        dest.writeInt(height);
+        dest.writeFloat(weight);
+    }
 }
