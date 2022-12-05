@@ -3,6 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/drawable/natour_create_collection_button.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/drawable/natour_profile_details_fav_collections.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/drawable/natour_profile_details_followed_users.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/drawable/natour_profile_details_general.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/drawable/natour_profile_details_mock.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/drawable/natour_profile_details_settings.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/drawable/natour_profile_details_white_divider.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/layout/activity_post_details.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/layout/cards_layout.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/layout/favcollection_cards_layout.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/layout/fragment_post_recycler.xml" value="0.18" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/layout/fragment_profile_details.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/layout/fragment_route_exploration.xml" value="0.18453947368421053" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/layout/fragment_route_search.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/Natour/src/main/res/layout/user_cards_layout.xml" value="0.19364754098360656" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3828125" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/animator_natour_mainscreen_earth.xml" value="0.16085526315789472" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/animator_natour_signin_earth.xml" value="0.22135416666666666" />
@@ -29,6 +44,7 @@
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_components_edittext_background.xml" value="0.19210526315789472" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_components_edittext_background_2.xml" value="0.1930921052631579" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_components_edittext_background_ripple.xml" value="0.1424342105263158" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_delete_button.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_difficulty_dot.xml" value="0.1730263157894737" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_difficulty_filter_circle.xml" value="0.18585526315789475" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_difficulty_filter_circle_disabled.xml" value="0.18585526315789475" />
@@ -51,6 +67,7 @@
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_mainscreen_google_icon.xml" value="0.13980263157894737" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_mainscreen_moon.xml" value="0.13980263157894737" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_new_post_button.xml" value="0.18980263157894736" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_no_button.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_people_icon.xml" value="0.17894736842105263" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_person_icon.xml" value="0.18980263157894736" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_pinpoint_icon.xml" value="0.18585526315789475" />
@@ -74,6 +91,7 @@
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_stronger_black_gradient_reverse.xml" value="0.13980263157894737" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_user_propic_post_card_ellipse.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_white_circle.xml" value="0.24177631578947367" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/natour_yes_button.xml" value="0.24177631578947367" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/drawable/spinnerbg.xml" value="0.13980263157894737" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/font/red_hat_text.xml" value="0.396875" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_authentication.xml" value="0.22" />
@@ -83,7 +101,7 @@
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_main.xml" value="0.67" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_creation.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_creation_maps.xml" value="0.2" />
-        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_details.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_details.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_post_filtering_maps.xml" value="0.14605263157894738" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_registration_form.xml" value="0.18" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/activity_reset_password.xml" value="0.2" />
@@ -100,9 +118,10 @@
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/natour_introduction_activity.xml" value="0.15949453551912568" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/natour_mainscreen_activity.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/natour_signin_activity.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_confirm.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_loading.xml" value="0.12" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_post_report.xml" value="0.22" />
-        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_post_update.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_post_update.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/popup_route_filtering.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/layout/user_cards_layout.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/UNINA/NaTour21/app/src/main/res/menu/nav_menu.xml" value="0.16875" />

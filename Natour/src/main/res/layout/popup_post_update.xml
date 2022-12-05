@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/popupPostUpdateBackButtonImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/natour_circle_back_button" />
+
+    <ScrollView
+        android:id="@+id/popupPostUpdateScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="480dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/popupPostUpdateImageViewCancelButton"
+        app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateBackButtonImageView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/popupPostUpdateDurationSliderValueTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="5'"
+                android:textColor="@color/lightgrey_text"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateDurationTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateDurationSlider" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/popupPostUpdateDurationSlider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="6dp"
+                android:stepSize="5"
+                android:value="5"
+                android:valueFrom="5"
+                android:valueTo="360"
+                app:haloColor="@color/teal_700"
+                app:labelBehavior="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateDurationTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateDurationTextView"
+                app:thumbColor="@color/teal_700"
+                app:tickColorActive="@color/teal_700"
+                app:tickColorInactive="@color/lightblue_nav_icon_ripple"
+                app:trackColorActive="@color/teal_700"
+                app:trackColorInactive="@color/lightblue_nav_icon_ripple" />
+
+            <TextView
+                android:id="@+id/popupPostUpdateDurationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Duration"
+                android:textColor="@color/teal_700"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateDifficultyTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateDifficultyLinearLayout" />
+
+            <Button
+                android:id="@+id/popupPostUpdateRouteTraceButton"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/white"
+                android:drawableLeft="@drawable/natour_line_path_icon"
+                android:elevation="20dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Tap to trace route"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/lightgrey_text"
+                android:textSize="16sp"
+                app:cornerRadius="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateRouteTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateRouteTextView"
+                app:strokeColor="@color/lightgrey_text"
+                app:strokeWidth="0.5dp" />
+
+            <Button
+                android:id="@+id/popupPostUpdateImportGPXButton"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="4dp"
+                android:backgroundTint="@color/white"
+                android:drawableLeft="@drawable/natour_add_file_icon"
+                android:elevation="20dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Import GPX file"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/lightgrey_text"
+                android:textSize="16sp"
+                app:cornerRadius="40dp"
+                app:layout_constraintEnd_toEndOf="@+id/popupPostUpdateRouteTraceButton"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateRouteTraceButton"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateOrTextView"
+                app:strokeColor="@color/lightgrey_text"
+                app:strokeWidth="0.5dp" />
+
+            <Button
+                android:id="@+id/popupPostUpdatePictureButton"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/white"
+                android:drawableLeft="@drawable/natour_image_selection_icon"
+                android:elevation="20dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Select an Image"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/lightgrey_text"
+                android:textSize="16sp"
+                app:cornerRadius="40dp"
+                app:layout_constraintEnd_toEndOf="@+id/popupPostUpdateRouteTraceButton"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdatePictureTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdatePictureTextView"
+                app:strokeColor="@color/lightgrey_text"
+                app:strokeWidth="0.5dp" />
+
+            <TextView
+                android:id="@+id/popupPostUpdateDifficultyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Difficulty"
+                android:textColor="@color/teal_700"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateDescriptionEditText"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateDescriptionEditText" />
+
+            <TextView
+                android:id="@+id/popupPostUpdateRouteTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Route"
+                android:textColor="@color/teal_700"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateDurationSliderValueTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateDurationSliderValueTextView" />
+
+            <TextView
+                android:id="@+id/popupPostUpdatePictureTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Picture"
+                android:textColor="@color/teal_700"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateImportGPXButton"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateImportGPXButton" />
+
+            <TextView
+                android:id="@+id/popupPostUpdateOrTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="OR"
+                android:textColor="@color/lightgrey_text"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateDurationTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateRouteTraceButton" />
+
+            <TextView
+                android:id="@+id/popupPostUpdateAccessibilityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Accessibility"
+                android:textColor="@color/teal_700"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdatePictureTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdatePictureButton" />
+
+            <CheckBox
+                android:id="@+id/popupPostUpdateAccessibilityCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:buttonTint="@color/teal_700"
+                android:checked="false"
+                app:layout_constraintBottom_toBottomOf="@+id/popupPostUpdateAccessibilityTextView"
+                app:layout_constraintStart_toEndOf="@+id/popupPostUpdateAccessibilityTextView"
+                app:layout_constraintTop_toTopOf="@+id/popupPostUpdateAccessibilityTextView" />
+
+            <LinearLayout
+                android:id="@+id/popupPostUpdateDifficultyLinearLayout"
+                android:layout_width="190dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="-8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="left"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateDifficultyTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateDifficultyTextView">
+
+                <ImageView
+                    android:id="@+id/popupPostUpdateDifficultyDot1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+                    tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+                <ImageView
+                    android:id="@+id/popupPostUpdateDifficultyDot2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+                    tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+                <ImageView
+                    android:id="@+id/popupPostUpdateDifficultyDot3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+                    tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+                <ImageView
+                    android:id="@+id/popupPostUpdateDifficultyDot4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+                    tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+                <ImageView
+                    android:id="@+id/popupPostUpdateDifficultyDot5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/natour_difficulty_filter_circle_disabled"
+                    tools:srcCompat="@drawable/natour_difficulty_filter_circle_disabled" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/popupPostUpdateDescriptionEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/natour_components_edittext_background"
+                android:elevation="20dp"
+                android:ems="10"
+                android:fontFamily="@font/redhattext_regular"
+                android:gravity="top"
+                android:inputType="textLongMessage|textMultiLine|text"
+                android:lines="18"
+                android:maxLines="18"
+                android:minLines="18"
+                android:paddingStart="20dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp"
+                android:singleLine="false"
+                android:textAlignment="viewStart"
+                android:textColor="@color/edit_text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateDescriptionTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateDescriptionTextView"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/popupPostUpdateDescriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Description"
+                android:textColor="@color/teal_700"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateTitleTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateTitleEditText" />
+
+            <EditText
+                android:id="@+id/popupPostUpdateTitleEditText"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/natour_components_edittext_background"
+                android:elevation="20dp"
+                android:ems="10"
+                android:fontFamily="@font/redhattext_regular"
+                android:inputType="text"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:textColor="@color/edit_text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/popupPostUpdateTitleTextView"
+                app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateTitleTextView"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/popupPostUpdateTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/redhattext_medium"
+                android:text="Title"
+                android:textColor="@color/teal_700"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/popupPostUpdateImageViewCancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popupPostUpdateScrollView"
+        app:srcCompat="@drawable/natour_cancel_button" />
+
+    <ImageView
+        android:id="@+id/popupPostUpdateImageViewDeleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/popupPostUpdateImageViewCancelButton"
+        app:layout_constraintEnd_toStartOf="@+id/popupPostUpdateImageViewDoneButton"
+        app:layout_constraintStart_toEndOf="@+id/popupPostUpdateImageViewCancelButton"
+        app:layout_constraintTop_toTopOf="@+id/popupPostUpdateImageViewCancelButton"
+        app:layout_constraintVertical_bias="0.543"
+        app:srcCompat="@drawable/natour_delete_button" />
+
+    <ImageView
+        android:id="@+id/popupPostUpdateImageViewDoneButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/popupPostUpdateImageViewCancelButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/popupPostUpdateImageViewCancelButton"
+        app:srcCompat="@drawable/natour_done_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

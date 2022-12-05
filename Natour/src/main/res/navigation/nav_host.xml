@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_host"
+    app:startDestination="@id/routeExplorationFragment2">
+
+    <fragment
+        android:id="@+id/routeExplorationFragment2"
+        android:name="edu.unina.natour21.view.fragment.RouteExplorationFragment"
+        android:label="fragment_route_exploration"
+        tools:layout="@layout/fragment_route_exploration" >
+        <action
+            android:id="@+id/action_routeExplorationFragment2_to_routeSearchFragment"
+            app:destination="@id/routeSearchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/routeSearchFragment"
+        android:name="edu.unina.natour21.view.fragment.RouteSearchFragment"
+        android:label="fragment_route_search"
+        tools:layout="@layout/fragment_route_search" />
+    <action android:id="@+id/action_global_home" app:destination="@id/routeExplorationFragment2" />
+    <fragment
+        android:id="@+id/postRecyclerFragment"
+        android:name="edu.unina.natour21.view.fragment.PostRecyclerFragment"
+        android:label="fragment_post_recycler"
+        tools:layout="@layout/fragment_post_recycler" >
+        <argument
+            android:name="MODE"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <action android:id="@+id/action_global_community" app:destination="@id/postRecyclerFragment" />
+    <fragment
+        android:id="@+id/profileDetailsFragment"
+        android:name="edu.unina.natour21.view.fragment.ProfileDetailsFragment"
+        android:label="fragment_profile_details"
+        tools:layout="@layout/fragment_profile_details" />
+    <action android:id="@+id/action_global_profile" app:destination="@id/profileDetailsFragment" />
+</navigation>
