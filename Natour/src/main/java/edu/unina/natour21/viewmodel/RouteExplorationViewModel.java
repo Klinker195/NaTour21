@@ -20,11 +20,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import edu.unina.natour21.R;
+import edu.unina.natour21.dto.FavCollectionDTO;
 import edu.unina.natour21.dto.PostDTO;
 import edu.unina.natour21.dto.UserDTO;
+import edu.unina.natour21.model.FavCollection;
 import edu.unina.natour21.model.Post;
 import edu.unina.natour21.model.User;
 import edu.unina.natour21.retrofit.AmazonAPI;
+import edu.unina.natour21.retrofit.IFavCollectionAPI;
 import edu.unina.natour21.retrofit.IPostAPI;
 import edu.unina.natour21.retrofit.IUserAPI;
 import retrofit2.Call;
@@ -45,6 +48,10 @@ public class RouteExplorationViewModel extends ViewModel {
 
     private final MutableLiveData<User> onCurrentUserFetchSuccess = new MutableLiveData<User>();
     private final MutableLiveData<Void> onCurrentUserFetchFailure = new MutableLiveData<Void>();
+
+    private final MutableLiveData<ArrayList<FavCollection>> onCurrentUserFavCollectionSuccess = new MutableLiveData<ArrayList<FavCollection>>();
+    private final MutableLiveData<Void> onCurrentUserFavCollectionFailure = new MutableLiveData<Void>();
+    private ArrayList<FavCollection> userFavCollections = new ArrayList<FavCollection>();
 
     public void setFragment(Fragment fragment, FragmentTransaction fragmentTransaction) {
         fragmentTransaction.replace(R.id.routeExplorationFragment, fragment, "RouteExploration");
@@ -80,7 +87,6 @@ public class RouteExplorationViewModel extends ViewModel {
     }
 
     public void getCurrentUser() {
-
         Amplify.Auth.fetchUserAttributes(new Consumer<List<AuthUserAttribute>>() {
             @Override
             public void accept(@NonNull List<AuthUserAttribute> attributes) {
@@ -114,11 +120,33 @@ public class RouteExplorationViewModel extends ViewModel {
                 onCurrentUserFetchFailure();
             }
         });
-
     }
 
-    public void getFavCollection(String collectionTitle) {
+    public void getCurrentUserFavCollectionsByEmail(String userEmail) {
+        IFavCollectionAPI favCollectionAPI = AmazonAPI.getClient().create(IFavCollectionAPI.class);
+        Call<List<FavCollectionDTO>> favCollectionCall = favCollectionAPI.getFavCollectionByEmail(userEmail);
 
+        favCollectionCall.enqueue(new Callback<List<FavCollectionDTO>>() {
+            @Override
+            public void onResponse(Call<List<FavCollectionDTO>> call, Response<List<FavCollectionDTO>> response) {
+                if(response.body() != null) {
+                    ArrayList<FavCollectionDTO> favCollectionDTOArrayList = new ArrayList<FavCollectionDTO>(response.body());
+                    ArrayList<FavCollection> favCollectionArrayList = new ArrayList<FavCollection>();
+                    for(FavCollectionDTO favCollectionDTO : favCollectionDTOArrayList) {
+                        favCollectionArrayList.add(new FavCollection(favCollectionDTO));
+                    }
+                    userFavCollections = favCollectionArrayList;
+                    onCurrentUserFavCollectionSuccess(favCollectionArrayList);
+                } else {
+                    onCurrentUserFavCollectionFailure();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<FavCollectionDTO>> call, Throwable t) {
+                onCurrentUserFavCollectionFailure();
+            }
+        });
     }
 
     public void getUsersWithPaging(Integer page, Integer pageSize, String genericName) {
@@ -189,6 +217,14 @@ public class RouteExplorationViewModel extends ViewModel {
         });
     }
 
+    private void onCurrentUserFavCollectionSuccess(ArrayList<FavCollection> favCollectionArrayList) {
+        onCurrentUserFavCollectionSuccess.postValue(favCollectionArrayList);
+    }
+
+    private void onCurrentUserFavCollectionFailure() {
+        onCurrentUserFavCollectionFailure.postValue(null);
+    }
+
     private void onCurrentUserFetchSuccess(User user) {
         onCurrentUserFetchSuccess.postValue(user);
     }
@@ -225,6 +261,14 @@ public class RouteExplorationViewModel extends ViewModel {
 
     private void onUserFetchFailure(User[] userArray) {
         onUserFetchFailure.postValue(users);
+    }
+
+    public LiveData<ArrayList<FavCollection>> getOnCurrentUserFavCollectionSuccess() {
+        return onCurrentUserFavCollectionSuccess;
+    }
+
+    public LiveData<Void> getOnCurrentUserFavCollectionFailure() {
+        return onCurrentUserFavCollectionFailure;
     }
 
     public LiveData<User> getOnCurrentUserFetchSuccess() {
@@ -265,5 +309,13 @@ public class RouteExplorationViewModel extends ViewModel {
 
     public User[] getUsers() {
         return users;
+    }
+
+    public ArrayList<FavCollection> getUserFavCollections() {
+        return userFavCollections;
+    }
+
+    public void setUserFavCollections(ArrayList<FavCollection> userFavCollections) {
+        this.userFavCollections = userFavCollections;
     }
 }

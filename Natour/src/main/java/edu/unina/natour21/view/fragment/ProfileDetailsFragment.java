@@ -11,12 +11,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.unina.natour21.R;
@@ -59,6 +62,9 @@ public class ProfileDetailsFragment extends Fragment {
         nicknameTextView = (TextView) view.findViewById(R.id.fragmentProfileDetailsNicknameTextView);
         recyclerView = (RecyclerView) view.findViewById(R.id.fragmentProfileDetailsFavCollectionsRecyclerView);
 
+        nameSurnameTextView.setTextColor(getResources().getColor(R.color.white));
+        nicknameTextView.setTextColor(getResources().getColor(R.color.white));
+
         viewModel = new ViewModelProvider(getActivity()).get(RouteExplorationViewModel.class);
         viewModel.setPosts(new Post[0]);
         viewModel.setUsers(new User[0]);
@@ -71,14 +77,48 @@ public class ProfileDetailsFragment extends Fragment {
         viewModel.getOnCurrentUserFetchSuccess().observe(this.getActivity(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
+                nameSurnameTextView.setTextColor(getResources().getColor(R.color.edit_text_color));
+                nicknameTextView.setTextColor(getResources().getColor(R.color.edit_text_color));
                 propicImageView.setImageBitmap(user.getPropic());
                 nameSurnameTextView.setText(user.getName() + " " + user.getSurname());
                 nicknameTextView.setText("@" + user.getNickname());
-                dismissLoadingDialog();
+                // dismissLoadingDialog();
+                viewModel.getCurrentUserFavCollectionsByEmail(user.getEmail());
             }
         });
 
         viewModel.getOnCurrentUserFetchFailure().observe(this.getActivity(), new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                // TODO: Error
+                dismissLoadingDialog();
+            }
+        });
+
+        viewModel.getOnCurrentUserFavCollectionSuccess().observe(this.getActivity(), new Observer<ArrayList<FavCollection>>() {
+            @Override
+            public void onChanged(ArrayList<FavCollection> favCollectionArrayList) {
+                ArrayList<FavCollection> newFavCollectionArrayList = new ArrayList<FavCollection>();
+
+                // TODO: Check if correct
+
+                for(FavCollection favCollection : favCollectionArrayList) {
+                    if(favCollection != null && favCollection.getPosts() != null && !favCollection.getPosts().isEmpty()) {
+                        newFavCollectionArrayList.add(favCollection);
+                    }
+                }
+
+                if(recyclerView.getAdapter() != null) {
+                    ((FavCollectionAdapter) recyclerView.getAdapter()).setLocalDataSet(newFavCollectionArrayList.toArray(new FavCollection[newFavCollectionArrayList.size()]));
+                } else {
+                    recyclerView.setAdapter(new FavCollectionAdapter(newFavCollectionArrayList.toArray(new FavCollection[newFavCollectionArrayList.size()]), getParentFragmentManager()));
+                }
+                recyclerView.getAdapter().notifyDataSetChanged();
+                dismissLoadingDialog();
+            }
+        });
+
+        viewModel.getOnCurrentUserFavCollectionFailure().observe(this.getActivity(), new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
                 // TODO: Error

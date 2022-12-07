@@ -63,4 +63,16 @@
         </androidx.recyclerview.widget.RecyclerView>
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/fragmentPostRecyclerNothingToSeeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/natour_nothing_to_see"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentPostRecyclerWhiteBackgroundBlurImageView"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentPostRecyclerWhiteBackgroundBlurImageView"
+        app:layout_constraintStart_toStartOf="@+id/fragmentPostRecyclerWhiteBackgroundBlurImageView"
+        app:layout_constraintTop_toTopOf="@+id/fragmentPostRecyclerWhiteBackgroundBlurImageView"
+        tools:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

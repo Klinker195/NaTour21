@@ -30,6 +30,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.model.FavCollection;
@@ -59,15 +60,21 @@ public class FavCollectionAdapter extends RecyclerView.Adapter<FavCollectionAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titleTextView;
+        private ImageView iconImageView;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
             titleTextView = (TextView) view.findViewById(R.id.collectionCardTitleTextView);
+            iconImageView = (ImageView) view.findViewById(R.id.collectionCardIconImageView);
         }
 
         public TextView getTitleTextView() {
             return titleTextView;
+        }
+
+        public ImageView getIconImageView() {
+            return iconImageView;
         }
 
     }
@@ -77,7 +84,7 @@ public class FavCollectionAdapter extends RecyclerView.Adapter<FavCollectionAdap
         FavCollection createNewCollection = new FavCollection();
         createNewCollection.setTitle("Create new collection");
         dataSetArrayList.add(createNewCollection);
-        localDataSet = dataSetArrayList.toArray(new FavCollection[dataSetArrayList.size()]);
+        this.localDataSet = dataSetArrayList.toArray(new FavCollection[dataSetArrayList.size()]);
         this.fragmentManager = fragmentManager;
     }
 
@@ -115,8 +122,37 @@ public class FavCollectionAdapter extends RecyclerView.Adapter<FavCollectionAdap
         // contents of the view with that element
 
         TextView titleTextView = viewHolder.getTitleTextView();
+        ImageView iconImageView = viewHolder.getIconImageView();
 
-        titleTextView.setText(localDataSet[position].getTitle());
+        String title = localDataSet[position].getTitle().substring(0, 1) + localDataSet[position].getTitle().toLowerCase(Locale.ROOT).substring(1);
+        titleTextView.setText(title);
+
+        iconImageView.setImageBitmap(null);
+
+        if(localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("FAVORITES")) {
+            iconImageView.setBackgroundResource(R.drawable.natour_fav_collection_button);
+        } else if(localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("TO VISIT")) {
+            iconImageView.setBackgroundResource(R.drawable.natour_visit_collection_button);
+        } else if(localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("CREATE NEW COLLECTION")) {
+            iconImageView.setBackgroundResource(R.drawable.natour_create_collection_button);
+        } else {
+            iconImageView.setBackgroundResource(R.drawable.natour_create_collection_button);
+        }
+
+        /*
+        if(localDataSet[position].getTitle().equals("Favorites")) {
+            bitmap = BitmapFactory.decodeResource(fragmentManager.getPrimaryNavigationFragment().getResources(), R.drawable.natour_fav_collection_button);
+        } else if(localDataSet[position].getTitle().equals("To visit")) {
+            bitmap = BitmapFactory.decodeResource(fragmentManager.getPrimaryNavigationFragment().getResources(), R.drawable.natour_visit_collection_button);
+        } else if(localDataSet[position].getTitle().equals("Create new collection")) {
+            bitmap = BitmapFactory.decodeResource(fragmentManager.getPrimaryNavigationFragment().getResources(), R.drawable.natour_create_collection_button);
+        } else {
+            bitmap = BitmapFactory.decodeResource(fragmentManager.getPrimaryNavigationFragment().getResources(), R.drawable.natour_create_collection_button);
+        }
+
+        if(bitmap != null) iconImageView.setImageBitmap(bitmap);
+         */
+
         NatourUIDesignHandler designHandler = new NatourUIDesignHandler();
         designHandler.setTextGradient(titleTextView);
     }
@@ -128,7 +164,11 @@ public class FavCollectionAdapter extends RecyclerView.Adapter<FavCollectionAdap
     }
 
     public void setLocalDataSet(FavCollection[] localDataSet) {
-        this.localDataSet = localDataSet;
+        ArrayList<FavCollection> dataSetArrayList = new ArrayList<FavCollection>(Arrays.asList(localDataSet));
+        FavCollection createNewCollection = new FavCollection();
+        createNewCollection.setTitle("Create new collection");
+        dataSetArrayList.add(createNewCollection);
+        this.localDataSet = dataSetArrayList.toArray(new FavCollection[dataSetArrayList.size()]);
     }
 
 }

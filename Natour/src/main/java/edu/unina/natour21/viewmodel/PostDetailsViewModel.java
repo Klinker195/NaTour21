@@ -25,12 +25,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.unina.natour21.dto.FavCollectionDTO;
 import edu.unina.natour21.dto.PostDTO;
 import edu.unina.natour21.dto.ReportDTO;
 import edu.unina.natour21.dto.UserDTO;
+import edu.unina.natour21.model.FavCollection;
 import edu.unina.natour21.model.Post;
 import edu.unina.natour21.model.User;
 import edu.unina.natour21.retrofit.AmazonAPI;
+import edu.unina.natour21.retrofit.IFavCollectionAPI;
 import edu.unina.natour21.retrofit.IPostAPI;
 import edu.unina.natour21.retrofit.IReportAPI;
 import edu.unina.natour21.retrofit.IUserAPI;
@@ -49,14 +52,29 @@ public class PostDetailsViewModel extends ViewModel {
 
     private MutableLiveData<Void> onReportSaveSuccess = new MutableLiveData<Void>();
     private MutableLiveData<Void> onReportSaveFailure = new MutableLiveData<Void>();
+
     private final MutableLiveData<Void> onUserQuerySuccess = new MutableLiveData<>();
     private final MutableLiveData<Void> onUserQueryFailure = new MutableLiveData<>();
+
     private final MutableLiveData<AuthException> onFetchUserAttributesFailure = new MutableLiveData<>();
+
     private final MutableLiveData<Void> onIncorrectFile = new MutableLiveData<>();
+
     private final MutableLiveData<Void> onPostQuerySuccess = new MutableLiveData<>();
     private final MutableLiveData<Void> onPostQueryFailure = new MutableLiveData<>();
+
     private final MutableLiveData<Void> onPostDeletionSuccess = new MutableLiveData<>();
     private final MutableLiveData<Void> onPostDeletionFailure = new MutableLiveData<>();
+
+    private final MutableLiveData<Boolean> onAddPostToFavCollectionSuccess = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> onAddPostToFavCollectionFailure = new MutableLiveData<>();
+
+    private final MutableLiveData<Boolean> onRemovePostFromCollectionSuccess = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> onRemovePostFromCollectionFailure = new MutableLiveData<>();
+
+    private final MutableLiveData<ArrayList<FavCollection>> onCurrentUserFavCollectionSuccess = new MutableLiveData<ArrayList<FavCollection>>();
+    private final MutableLiveData<Void> onCurrentUserFavCollectionFailure = new MutableLiveData<Void>();
+    private ArrayList<FavCollection> userFavCollections = new ArrayList<FavCollection>();
 
     private Post currentPost;
     private Post editedPost;
@@ -76,6 +94,76 @@ public class PostDetailsViewModel extends ViewModel {
             Log.d(TAG, newGpx.toString());
         }
         return newGpx;
+    }
+
+    public void removePostFromCollection(Long collectionId) {
+        IFavCollectionAPI favCollectionAPI = AmazonAPI.getClient().create(IFavCollectionAPI.class);
+        Call<Boolean> favCollectionCall = favCollectionAPI.removePostFromFavCollection(collectionId, currentPost.getId());
+
+        favCollectionCall.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if(response.body() != null) {
+                    onRemovePostFromCollectionSuccess();
+                } else {
+                    onRemovePostFromCollectionFailure();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                onRemovePostFromCollectionFailure();
+            }
+        });
+
+    }
+
+    public void addPostToFavCollection(Long collectionId) {
+        IFavCollectionAPI favCollectionAPI = AmazonAPI.getClient().create(IFavCollectionAPI.class);
+        Call<Boolean> favCollectionCall = favCollectionAPI.addPostToFavCollection(collectionId, currentPost.getId());
+
+        favCollectionCall.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if(response.body() != null) {
+                    onAddPostToFavCollectionSuccess();
+                } else {
+                    onAddPostToFavCollectionFailure();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                onAddPostToFavCollectionFailure();
+            }
+        });
+    }
+
+    public void getCurrentUserFavCollections() {
+        IFavCollectionAPI favCollectionAPI = AmazonAPI.getClient().create(IFavCollectionAPI.class);
+        Call<List<FavCollectionDTO>> favCollectionCall = favCollectionAPI.getFavCollectionByEmail(currentUser.getEmail());
+
+        favCollectionCall.enqueue(new Callback<List<FavCollectionDTO>>() {
+            @Override
+            public void onResponse(Call<List<FavCollectionDTO>> call, Response<List<FavCollectionDTO>> response) {
+                if(response.body() != null) {
+                    ArrayList<FavCollectionDTO> favCollectionDTOArrayList = new ArrayList<FavCollectionDTO>(response.body());
+                    ArrayList<FavCollection> favCollectionArrayList = new ArrayList<FavCollection>();
+                    for(FavCollectionDTO favCollectionDTO : favCollectionDTOArrayList) {
+                        favCollectionArrayList.add(new FavCollection(favCollectionDTO));
+                    }
+                    userFavCollections = favCollectionArrayList;
+                    onCurrentUserFavCollectionSuccess(favCollectionArrayList);
+                } else {
+                    onCurrentUserFavCollectionFailure();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<FavCollectionDTO>> call, Throwable t) {
+                onCurrentUserFavCollectionFailure();
+            }
+        });
     }
 
     // path getFilesDir().getAbsolutePath()
@@ -379,6 +467,21 @@ public class PostDetailsViewModel extends ViewModel {
         }
     }
 
+    private void onRemovePostFromCollectionSuccess() {
+        onRemovePostFromCollectionSuccess.postValue(true);
+    }
+
+    private void onRemovePostFromCollectionFailure() {
+        onRemovePostFromCollectionFailure.postValue(false);
+    }
+
+    private void onCurrentUserFavCollectionSuccess(ArrayList<FavCollection> favCollectionArrayList) {
+        onCurrentUserFavCollectionSuccess.postValue(favCollectionArrayList);
+    }
+
+    private void onCurrentUserFavCollectionFailure() {
+        onCurrentUserFavCollectionFailure.postValue(null);
+    }
 
     public void onPostDeletionSuccess() {
         onPostDeletionSuccess.postValue(null);
@@ -402,6 +505,22 @@ public class PostDetailsViewModel extends ViewModel {
 
     public void onPostQueryFailure() {
         onPostQueryFailure.postValue(null);
+    }
+
+    public void onAddPostToFavCollectionSuccess() {
+        onAddPostToFavCollectionSuccess.postValue(true);
+    }
+
+    public void onAddPostToFavCollectionFailure() {
+        onAddPostToFavCollectionFailure.postValue(false);
+    }
+
+    public MutableLiveData<Boolean> getOnRemovePostFromCollectionSuccess() {
+        return onRemovePostFromCollectionSuccess;
+    }
+
+    public MutableLiveData<Boolean> getOnRemovePostFromCollectionFailure() {
+        return onRemovePostFromCollectionFailure;
     }
 
     public LiveData<Void> getOnPostDeletionSuccess() {
@@ -452,6 +571,22 @@ public class PostDetailsViewModel extends ViewModel {
         return onIncorrectFile;
     }
 
+    public LiveData<Boolean> getOnAddPostToFavCollectionSuccess() {
+        return onAddPostToFavCollectionSuccess;
+    }
+
+    public LiveData<Boolean> getOnAddPostToFavCollectionFailure() {
+        return onAddPostToFavCollectionFailure;
+    }
+
+    public LiveData<ArrayList<FavCollection>> getOnCurrentUserFavCollectionSuccess() {
+        return onCurrentUserFavCollectionSuccess;
+    }
+
+    public LiveData<Void> getOnCurrentUserFavCollectionFailure() {
+        return onCurrentUserFavCollectionFailure;
+    }
+
     public Post getCurrentPost() {
         return currentPost;
     }
@@ -476,4 +611,7 @@ public class PostDetailsViewModel extends ViewModel {
         this.editedPost = editedPost;
     }
 
+    public ArrayList<FavCollection> getUserFavCollections() {
+        return userFavCollections;
+    }
 }

@@ -4,7 +4,8 @@
     android:id="@+id/postCardOuterConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="30dp">
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp">
     <!-- A CardView that contains a TextView -->
 
     <androidx.cardview.widget.CardView
@@ -71,11 +72,11 @@
                 android:clickable="false"
                 android:contextClickable="false"
                 android:longClickable="false"
+                android:stateListAnimator="@null"
                 card_view:backgroundTint="@color/white"
                 card_view:layout_constraintBottom_toBottomOf="@+id/postCardPicImageView"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:rippleColor="#00000000"
-                android:stateListAnimator="@null" />
+                card_view:rippleColor="#00000000" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/postCardReportBackgroundButton"
@@ -291,6 +292,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:selectAllOnFocus="false"
+                android:stateListAnimator="@null"
                 android:text="5.0"
                 android:textAlignment="center"
                 android:textAllCaps="false"
@@ -302,8 +304,7 @@
                 card_view:layout_constraintBottom_toBottomOf="@+id/postCardPicShadowImageView2"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:rippleColor="#00000000"
-                card_view:strokeColor="#DFDFDF"
-                android:stateListAnimator="@null" />
+                card_view:strokeColor="#DFDFDF" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

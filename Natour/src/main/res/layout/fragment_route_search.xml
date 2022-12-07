@@ -139,6 +139,7 @@
         app:layout_constraintTop_toBottomOf="@+id/fragmentRouteSearchWhiteBarImageView" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="12dp"
@@ -162,5 +163,17 @@
         </androidx.recyclerview.widget.RecyclerView>
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/fragmentRouteSearchNothingToSeeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/natour_nothing_to_see"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentRouteSearchWhiteBackgroundBlurImageView"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentRouteSearchWhiteBackgroundBlurImageView"
+        app:layout_constraintStart_toStartOf="@+id/fragmentRouteSearchWhiteBackgroundBlurImageView"
+        app:layout_constraintTop_toTopOf="@+id/fragmentRouteSearchWhiteBackgroundBlurImageView"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

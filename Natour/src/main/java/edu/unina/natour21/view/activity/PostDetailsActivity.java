@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import edu.unina.natour21.R;
+import edu.unina.natour21.model.FavCollection;
 import edu.unina.natour21.model.Post;
 import edu.unina.natour21.utility.NatourFileHandler;
 import edu.unina.natour21.viewmodel.PostDetailsViewModel;
@@ -110,6 +111,10 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapsSdkI
     private TextView accessibilityTextView;
     private ImageView accessibilityMarkerImageView;
 
+    private Button popupAddToFavFavButton;
+    private Button popupAddToVisitFavButton;
+    private ImageView popupAddToFavCancelImageView;
+
     private ImageView popupPostReportBackButtonImageView;
     private EditText popupPostReportTitleEditText;
     private EditText popupPostReportDescriptionEditText;
@@ -137,6 +142,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapsSdkI
     private ImageView popupConfirmImageViewNoButton;
 
     private Dialog loadingDialog;
+    private Dialog addToFavDialog;
 
     private ArrayList<LatLng> pointArrayList;
 
@@ -328,6 +334,15 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapsSdkI
                 accessibilityImageView.setVisibility(View.GONE);
             }
             // TODO: Verify addToFav ImageView Button
+
+            addToFavImageView.setEnabled(false);
+
+            addToFavImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showAddToFavDialog();
+                }
+            });
 
             if(viewModel.getCurrentPost().getAuthor() != null) {
                 userPropicImageView.setImageBitmap(viewModel.getCurrentPost().getAuthor().getPropic());
@@ -600,6 +615,127 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapsSdkI
         }
     }
 
+    private void showAddToFavDialog() {
+        addToFavDialog = new Dialog(this);
+        addToFavDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        addToFavDialog.setCancelable(true);
+        addToFavDialog.setContentView(R.layout.popup_post_add_to_fav);
+
+        addToFavDialog.show();
+
+        // Find Views
+        popupAddToFavFavButton = (Button) addToFavDialog.findViewById(R.id.popupAddToFavFavButton);
+        popupAddToVisitFavButton = (Button) addToFavDialog.findViewById(R.id.popupAddToVisitFavButton);
+        popupAddToFavCancelImageView = (ImageView) addToFavDialog.findViewById(R.id.popupAddToFavCancelImageView);
+
+        // Set Listeners
+        popupAddToFavFavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                boolean queryCheck = true;
+
+                for(Post post : viewModel.getUserFavCollections().get(0).getPosts()) {
+                    if(post.getId() == viewModel.getCurrentPost().getId()) {
+                        Toast.makeText(PostDetailsActivity.this, "Post already in \"Favorites\" collection, long tap to remove",
+                                Toast.LENGTH_SHORT).show();
+                        queryCheck = false;
+                    }
+                }
+
+                if(queryCheck) {
+                    showLoadingDialog();
+                    viewModel.addPostToFavCollection(viewModel.getUserFavCollections().get(0).getId());
+                }
+            }
+        });
+
+        popupAddToFavFavButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                boolean queryCheck = false;
+
+                for(Post post : viewModel.getUserFavCollections().get(0).getPosts()) {
+                    if(post.getId() == viewModel.getCurrentPost().getId()) {
+                        queryCheck = true;
+                    }
+                }
+
+                if(!queryCheck) {
+                    Toast.makeText(PostDetailsActivity.this, "Post isn't in \"Favorites\" collection, tap to add",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                if(queryCheck) {
+                    showLoadingDialog();
+                    viewModel.removePostFromCollection(viewModel.getUserFavCollections().get(0).getId());
+                }
+                return true;
+            }
+        });
+
+        popupAddToVisitFavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                boolean queryCheck = true;
+
+                for(Post post : viewModel.getUserFavCollections().get(1).getPosts()) {
+                    if(post.getId() == viewModel.getCurrentPost().getId()) {
+                        Toast.makeText(PostDetailsActivity.this, "Post already in \"To visit\" collection, long tap to remove",
+                                Toast.LENGTH_SHORT).show();
+                        queryCheck = false;
+                    }
+                }
+
+                if(queryCheck) {
+                    showLoadingDialog();
+                    viewModel.addPostToFavCollection(viewModel.getUserFavCollections().get(1).getId());
+                }
+            }
+        });
+
+        popupAddToVisitFavButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                boolean queryCheck = false;
+
+                for(Post post : viewModel.getUserFavCollections().get(1).getPosts()) {
+                    if(post.getId() == viewModel.getCurrentPost().getId()) {
+                        queryCheck = true;
+                    }
+                }
+
+                if(!queryCheck) {
+                    Toast.makeText(PostDetailsActivity.this, "Post isn't in \"To visit\" collection, tap to add",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                if(queryCheck) {
+                    showLoadingDialog();
+                    viewModel.removePostFromCollection(viewModel.getUserFavCollections().get(1).getId());
+                }
+                return true;
+            }
+        });
+
+        popupAddToFavCancelImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addToFavDialog.dismiss();
+            }
+        });
+
+        // Set Window
+        Window window = addToFavDialog.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        window.setBackgroundDrawableResource(R.drawable.natour_components_edittext_background);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            window.setBackgroundBlurRadius(10);
+        }
+    }
+
     private void showConfirmationDialog() {
         final Dialog confirmationDialog = new Dialog(this);
         confirmationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -739,6 +875,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapsSdkI
                 } else {
                     editButtonImageView.setVisibility(View.GONE);
                 }
+                viewModel.getCurrentUserFavCollections();
                 // dismissLoadingDialog();
             }
         });
@@ -775,6 +912,62 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapsSdkI
             public void onChanged(Void unused) {
                 dismissLoadingDialog();
                 Toast.makeText(PostDetailsActivity.this, "Couldn't edit post",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getOnCurrentUserFavCollectionSuccess().observe(this, new Observer<ArrayList<FavCollection>>() {
+            @Override
+            public void onChanged(ArrayList<FavCollection> favCollectionArrayList) {
+                addToFavImageView.setEnabled(true);
+            }
+        });
+
+        viewModel.getOnCurrentUserFavCollectionFailure().observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(Void unused) {
+                addToFavImageView.setEnabled(false);
+                Toast.makeText(PostDetailsActivity.this, "Couldn't fetch user collections",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getOnAddPostToFavCollectionSuccess().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                dismissLoadingDialog();
+                if(addToFavDialog != null) addToFavDialog.dismiss();
+                Toast.makeText(PostDetailsActivity.this, "Post added to collection",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getOnAddPostToFavCollectionFailure().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                dismissLoadingDialog();
+                if(addToFavDialog != null) addToFavDialog.dismiss();
+                Toast.makeText(PostDetailsActivity.this, "Couldn't add post to collection",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getOnRemovePostFromCollectionSuccess().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                dismissLoadingDialog();
+                if(addToFavDialog != null) addToFavDialog.dismiss();
+                Toast.makeText(PostDetailsActivity.this, "Post removed from collection",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getOnRemovePostFromCollectionFailure().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                dismissLoadingDialog();
+                if(addToFavDialog != null) addToFavDialog.dismiss();
+                Toast.makeText(PostDetailsActivity.this, "Couldn't remove post from collection",
                         Toast.LENGTH_SHORT).show();
             }
         });

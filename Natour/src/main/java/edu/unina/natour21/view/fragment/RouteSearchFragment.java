@@ -71,6 +71,7 @@ public class RouteSearchFragment extends Fragment {
     private ImageView cardsWhiteBarImageView;
     private RecyclerView recyclerView;
     private LinearLayout linearLayout;
+    private ImageView nothingToSeeImageView;
 
     private ImageView popupRouteFilteringBackButtonImageView;
     private TextView popupRouteFilteringDifficultyTextView;
@@ -155,6 +156,7 @@ public class RouteSearchFragment extends Fragment {
         cardsBackgroundImageView = (ImageView) getView().findViewById(R.id.fragmentRouteSearchWhiteBackgroundBlurImageView);
         cardsWhiteBarImageView = (ImageView) getView().findViewById(R.id.fragmentRouteSearchWhiteBarImageView);
         recyclerView = (RecyclerView) getView().findViewById(R.id.fragmentRouteSearchRecyclerView);
+        nothingToSeeImageView = (ImageView) getView().findViewById(R.id.fragmentRouteSearchNothingToSeeImageView);
         //linearLayout = (LinearLayout) getView().findViewById(R.id.routeSearchLinearLayout);
 
         routesSelectorButton.setEnabled(false);
@@ -487,6 +489,11 @@ public class RouteSearchFragment extends Fragment {
         viewModel.getOnPostFetchSuccess().observe(this.getActivity(), new Observer<Post[]>() {
             @Override
             public void onChanged(Post[] posts) {
+                if(posts.length == 0) {
+                    nothingToSeeImageView.setVisibility(View.VISIBLE);
+                } else {
+                    nothingToSeeImageView.setVisibility(View.GONE);
+                }
                 if(recyclerView.getAdapter() != null) {
                     if(recyclerView.getAdapter() instanceof UserCardAdapter) {
                         recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
@@ -506,6 +513,11 @@ public class RouteSearchFragment extends Fragment {
         viewModel.getOnPostFetchFailure().observe(this.getActivity(), new Observer<Post[]>() {
             @Override
             public void onChanged(Post[] posts) {
+                if(posts.length == 0) {
+                    nothingToSeeImageView.setVisibility(View.VISIBLE);
+                } else {
+                    nothingToSeeImageView.setVisibility(View.GONE);
+                }
                 routesSelectorButton.setEnabled(true);
                 usersSelectorButton.setEnabled(true);
                 dismissLoadingDialog();
@@ -515,6 +527,11 @@ public class RouteSearchFragment extends Fragment {
         viewModel.getOnUserFetchSuccess().observe(this.getActivity(), new Observer<User[]>() {
             @Override
             public void onChanged(User[] users) {
+                if(users.length == 0) {
+                    nothingToSeeImageView.setVisibility(View.VISIBLE);
+                } else {
+                    nothingToSeeImageView.setVisibility(View.GONE);
+                }
                 if(recyclerView.getAdapter() != null) {
                     if(recyclerView.getAdapter() instanceof PostCardAdapter) {
                         recyclerView.setAdapter(new UserCardAdapter(new User[0]));
@@ -534,6 +551,11 @@ public class RouteSearchFragment extends Fragment {
         viewModel.getOnUserFetchFailure().observe(this.getActivity(), new Observer<User[]>() {
             @Override
             public void onChanged(User[] users) {
+                if(users.length == 0) {
+                    nothingToSeeImageView.setVisibility(View.VISIBLE);
+                } else {
+                    nothingToSeeImageView.setVisibility(View.GONE);
+                }
                 routesSelectorButton.setEnabled(true);
                 usersSelectorButton.setEnabled(true);
                 dismissLoadingDialog();

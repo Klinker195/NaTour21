@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,14 +17,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import java.util.LinkedList;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.adapter.PostCardAdapter;
 import edu.unina.natour21.adapter.UserCardAdapter;
+import edu.unina.natour21.model.FavCollection;
 import edu.unina.natour21.model.Post;
 import edu.unina.natour21.model.User;
 import edu.unina.natour21.viewmodel.RouteExplorationViewModel;
+import io.jenetics.jpx.Link;
 
 public class PostRecyclerFragment extends Fragment {
 
@@ -42,6 +49,7 @@ public class PostRecyclerFragment extends Fragment {
     private RouteExplorationViewModel viewModel;
 
     private RecyclerView recyclerView;
+    private ImageView nothingToSeeImageView;
 
     private Dialog loadingDialog;
 
@@ -78,6 +86,7 @@ public class PostRecyclerFragment extends Fragment {
 
         // Find Views
         recyclerView = (RecyclerView) view.findViewById(R.id.fragmentPostRecyclerRecyclerView);
+        nothingToSeeImageView = (ImageView) view.findViewById(R.id.fragmentPostRecyclerNothingToSeeImageView);
 
         // Set ViewModel
         viewModel = new ViewModelProvider(getActivity()).get(RouteExplorationViewModel.class);
@@ -110,7 +119,27 @@ public class PostRecyclerFragment extends Fragment {
                                 false
                         );
                     } else if(mode == 1) {
-                        // TODO: Call ViewModel method to get Posts of FavList or get them from parcel(?)
+                        // TODO: Make query instead of using cached objects
+                        if(viewModel.getUserFavCollections() != null && !viewModel.getUserFavCollections().isEmpty()) {
+                            for(FavCollection favCollection : viewModel.getUserFavCollections()) {
+                                if(favCollection.getId() == collectionId) {
+                                    if(favCollection.getPosts() != null && !favCollection.getPosts().isEmpty()) {
+                                        Integer sublistIndex = currentRecyclerViewPage * recyclerViewPageSize;
+                                        if(sublistIndex > favCollection.getPosts().size()) sublistIndex = favCollection.getPosts().size();
+                                        LinkedList<Post> favCollectionLinkedList = new LinkedList<Post>(favCollection.getPosts().subList(0, sublistIndex));
+                                        if(recyclerView.getAdapter() != null) {
+                                            ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(favCollection.getPosts().toArray(new Post[favCollection.getPosts().size()]));
+                                        } else {
+                                            recyclerView.setAdapter(new PostCardAdapter(favCollection.getPosts().toArray(new Post[favCollection.getPosts().size()])));
+                                        }
+                                        recyclerView.getAdapter().notifyDataSetChanged();
+                                    } else {
+                                        currentRecyclerViewPage = 0;
+                                    }
+                                }
+                            }
+                        }
+                        dismissLoadingDialog();
                     }
 
                     Log.i(TAG, currentRecyclerViewPage.toString());
@@ -146,9 +175,33 @@ public class PostRecyclerFragment extends Fragment {
                     false
             );
         } else if(mode == 1) {
-            // TODO: Call ViewModel method to get Posts of FavList or get them from parcel(?)
+            // TODO: Make query instead of using cached objects
+            if(viewModel.getUserFavCollections() != null && !viewModel.getUserFavCollections().isEmpty()) {
+                for(FavCollection favCollection : viewModel.getUserFavCollections()) {
+                    if(favCollection.getId() == collectionId) {
+                        if(favCollection.getPosts() != null && !favCollection.getPosts().isEmpty()) {
+                            Integer sublistIndex = currentRecyclerViewPage * recyclerViewPageSize;
+                            if(sublistIndex > favCollection.getPosts().size()) sublistIndex = favCollection.getPosts().size();
+                            LinkedList<Post> favCollectionLinkedList = new LinkedList<Post>(favCollection.getPosts().subList(0, sublistIndex));
+                            if(recyclerView.getAdapter() != null) {
+                                ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(favCollection.getPosts().toArray(new Post[favCollection.getPosts().size()]));
+                            } else {
+                                recyclerView.setAdapter(new PostCardAdapter(favCollection.getPosts().toArray(new Post[favCollection.getPosts().size()])));
+                            }
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(this.getContext(), "The collection is empty", Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(getParentFragmentManager().getPrimaryNavigationFragment().getView()).navigate(R.id.action_global_profile);
+                            currentRecyclerViewPage = 0;
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(this.getContext(), "The collection is empty", Toast.LENGTH_SHORT).show();
+                Navigation.findNavController(getParentFragmentManager().getPrimaryNavigationFragment().getView()).navigate(R.id.action_global_profile);
+            }
+            dismissLoadingDialog();
         }
-
 
         currentRecyclerViewPage += 1;
     }
@@ -157,6 +210,11 @@ public class PostRecyclerFragment extends Fragment {
         viewModel.getOnPostFetchSuccess().observe(this.getActivity(), new Observer<Post[]>() {
             @Override
             public void onChanged(Post[] posts) {
+                if(posts.length == 0) {
+                    nothingToSeeImageView.setVisibility(View.VISIBLE);
+                } else {
+                    nothingToSeeImageView.setVisibility(View.GONE);
+                }
                 if(recyclerView.getAdapter() != null) {
                     ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(posts);
                 } else {
@@ -170,6 +228,11 @@ public class PostRecyclerFragment extends Fragment {
         viewModel.getOnPostFetchFailure().observe(this.getActivity(), new Observer<Post[]>() {
             @Override
             public void onChanged(Post[] posts) {
+                if(posts.length == 0) {
+                    nothingToSeeImageView.setVisibility(View.VISIBLE);
+                } else {
+                    nothingToSeeImageView.setVisibility(View.GONE);
+                }
                 dismissLoadingDialog();
             }
         });
