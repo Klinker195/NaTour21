@@ -7,7 +7,11 @@ import androidx.lifecycle.ViewModel;
 import com.amplifyframework.auth.AuthException;
 import com.amplifyframework.core.Amplify;
 
-public class ResetPasswordViewModel extends ViewModel {
+import edu.unina.natour21.view.activity.PostFilteringMapsActivity;
+
+public class ResetPasswordViewModel extends ViewModelBase {
+
+    private static final String TAG = ResetPasswordViewModel.class.getSimpleName();
 
     private final MutableLiveData<AuthException> onPasswordChangeError = new MutableLiveData<>();
     private final MutableLiveData<Void> onPasswordChangeSuccess = new MutableLiveData<>();
@@ -29,6 +33,7 @@ public class ResetPasswordViewModel extends ViewModel {
         );
     }
 
+
     private void onPasswordResetFailure(AuthException error) {
         onPasswordChangeError.postValue(error);
     }
@@ -36,6 +41,7 @@ public class ResetPasswordViewModel extends ViewModel {
     private void onPasswordResetSuccess() {
         onPasswordChangeSuccess.postValue(null);
     }
+
 
     public LiveData<AuthException> getPasswordChangeError() {
         return onPasswordChangeError;

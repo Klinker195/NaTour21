@@ -3,7 +3,6 @@ package edu.unina.natour21.retrofit;
 import java.util.List;
 
 import edu.unina.natour21.dto.PostDTO;
-import edu.unina.natour21.dto.UserDTO;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -26,7 +25,7 @@ public interface IPostAPI {
             @Path("difficulty") Integer difficulty,
             @Path("duration") Integer duration,
             @Path("accessibility") Boolean accessibility
-            );
+    );
 
     @GET("/post/{id}")
     Call<PostDTO> getPostByID(@Path("id") Long id);
@@ -36,5 +35,15 @@ public interface IPostAPI {
 
     @DELETE("/post/delete/{id}")
     Call<Void> deletePostById(@Path("id") Long id);
+
+    @GET("/favCollection/{collectionId}/posts/{page}/{pageSize}")
+    Call<List<PostDTO>> getPostsByCollectionId(
+            @Path("page") Integer page,
+            @Path("pageSize") Integer pageSize,
+            @Path("collectionId") Long collectionId
+    );
+
+    @GET("/post/random")
+    Call<PostDTO> getRandomPost();
 
 }

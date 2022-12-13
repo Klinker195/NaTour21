@@ -1,10 +1,8 @@
 package edu.unina.natour21.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,8 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +31,10 @@ import edu.unina.natour21.utility.NatourUIDesignHandler;
 import edu.unina.natour21.viewmodel.RegistrationFormViewModel;
 
 public class RegistrationFormActivity extends AppCompatActivity {
+
+    private static final String TAG = RegistrationFormActivity.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     private RegistrationFormViewModel viewModel;
 
@@ -47,21 +56,22 @@ public class RegistrationFormActivity extends AppCompatActivity {
     private int selectedYear;
     private int selectedMonth;
 
-    // TODO: Go to dashboard when continuing
+    private Dialog loadingDialog;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.signOut();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         // Get Bundle Data
         Bundle extras = getIntent().getExtras();
-        if(extras != null) {
+        if (extras != null) {
             email = extras.getString("email");
         }
 
@@ -111,7 +121,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 String name = nameEditText.getText().toString();
                 String surname = surnameEditText.getText().toString();
 
-                if(nickname.isEmpty() || name.isEmpty() || surname.isEmpty()) {
+                if (nickname.isEmpty() || name.isEmpty() || surname.isEmpty()) {
                     errorTextView.setVisibility(View.VISIBLE);
                     errorTextView.setText("Missing fields.");
                     return;
@@ -130,10 +140,10 @@ public class RegistrationFormActivity extends AppCompatActivity {
                 nameEditText.setText(name);
                 surnameEditText.setText(surname);
 
-                if(viewModel.checkNicknameFieldValidity(nickname)) {
-                    if(viewModel.checkNameAndSurnameFieldValidity(name, surname)) {
-                        if(viewModel.checkBirthdateValidity(selectedYear, selectedMonth)) {
-                            if(viewModel.checkWeightAndHeightValidity(height, weight)) {
+                if (viewModel.checkNicknameFieldValidity(nickname)) {
+                    if (viewModel.checkNameAndSurnameFieldValidity(name, surname)) {
+                        if (viewModel.checkBirthdateValidity(selectedYear, selectedMonth, Calendar.getInstance())) {
+                            if (viewModel.checkWeightAndHeightValidity(height, weight)) {
                                 errorTextView.setVisibility(View.INVISIBLE);
                                 errorTextView.setText("");
 
@@ -144,6 +154,8 @@ public class RegistrationFormActivity extends AppCompatActivity {
                                 datePickerButton.setEnabled(false);
                                 heightSpinner.setEnabled(false);
                                 weightSpinner.setEnabled(false);
+
+                                showLoadingDialog();
 
                                 viewModel.saveNewUser(nickname, name, surname, sex, birthdate, height, weight);
                             } else {
@@ -181,15 +193,23 @@ public class RegistrationFormActivity extends AppCompatActivity {
         viewModel.getOnSaveUser().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean result) {
-                if(result) {
+                dismissLoadingDialog();
+                if (result) {
                     errorTextView.setVisibility(View.INVISIBLE);
                     errorTextView.setText("");
-                    // TODO Go to dashboard
-                    Log.i("Natour", "Next step: go to dashboard");
+                    Log.i(TAG, "Next step: go to dashboard");
+                    Intent switchActivityIntent = new Intent(RegistrationFormActivity.this, RouteExplorationActivity.class);
+                    switchActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(switchActivityIntent);
+                    finish();
                 } else {
                     errorTextView.setVisibility(View.VISIBLE);
                     errorTextView.setText("Something went wrong.");
-                    Log.i("Natour", "Error: save error");
+                    Log.i(TAG, "Error: save error");
+                    viewModel.signOut();
+                    Intent switchActivityIntent = new Intent(RegistrationFormActivity.this, AuthenticationActivity.class);
+                    startActivity(switchActivityIntent);
+                    finish();
                 }
             }
         });
@@ -211,7 +231,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
         // Init Height Spinner
         List<String> heightSpinnerArray = new ArrayList<String>();
         heightSpinnerArray.add("   -");
-        for(int i = 100; i <= 250; i++) {
+        for (int i = 100; i <= 250; i++) {
             heightSpinnerArray.add("   " + i + "cm");
         }
 
@@ -223,7 +243,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
         // Init Weight Spinner
         List<String> weightSpinnerArray = new ArrayList<String>();
         weightSpinnerArray.add("   -");
-        for(int i = 30; i <= 150; i++) {
+        for (int i = 30; i <= 150; i++) {
             weightSpinnerArray.add("   " + i + "kg");
         }
 
@@ -238,7 +258,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 Log.i("Date", year + "/" + (month + 1) + "/" + day);
-                if(!viewModel.checkBirthdateValidity(year, month + 1)) {
+                if (!viewModel.checkBirthdateValidity(year, month + 1, Calendar.getInstance())) {
                     errorTextView.setVisibility(View.VISIBLE);
                     errorTextView.setText("You must be at least 14.");
                 } else {
@@ -277,7 +297,7 @@ public class RegistrationFormActivity extends AppCompatActivity {
     private Integer sexToInteger(String sex) {
         sex = sex.replace(" ", "");
         Integer sexInt;
-        switch(sex) {
+        switch (sex) {
             case "M":
                 sexInt = 0;
                 break;
@@ -296,6 +316,26 @@ public class RegistrationFormActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         viewModel.signOut();
+    }
+
+    private void showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = new Dialog(this);
+        }
+        loadingDialog.setCancelable(false);
+        loadingDialog.setContentView(R.layout.popup_loading);
+
+        ProgressBar loadingDialogProgressBar = (ProgressBar) findViewById(R.id.popupLoadingProgressBar);
+
+        loadingDialog.show();
+    }
+
+    private void dismissLoadingDialog() {
+        if (loadingDialog != null) {
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+        }
     }
 
 }

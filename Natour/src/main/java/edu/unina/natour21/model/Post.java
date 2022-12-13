@@ -1,31 +1,31 @@
 package edu.unina.natour21.model;
 
-import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 
 import edu.unina.natour21.dto.PostDTO;
-import edu.unina.natour21.dto.ReviewDTO;
 import io.jenetics.jpx.GPX;
 
 public class Post implements Parcelable {
 
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
     private Long id;
     private String title;
     private String description;
@@ -40,17 +40,18 @@ public class Post implements Parcelable {
     private LinkedList<Bitmap> pics;
     private Boolean isReported;
     private Float rate;
-    private User author;
     // private LinkedList<Review> reviews;
+    private User author;
 
     public Post(PostDTO postDTO) {
         super();
 
         this.id = postDTO.getId();
         this.title = postDTO.getTitle();
-        if(postDTO.getDescription() != null) this.description = postDTO.getDescription();
+        if (postDTO.getDescription() != null) this.description = postDTO.getDescription();
         this.timestamp = Timestamp.valueOf(postDTO.getTimestamp());
-        if(postDTO.getEditTimestamp() != null) this.editTimestamp = Timestamp.valueOf(postDTO.getEditTimestamp());
+        if (postDTO.getEditTimestamp() != null)
+            this.editTimestamp = Timestamp.valueOf(postDTO.getEditTimestamp());
         this.accessibility = postDTO.getAccessibility();
         this.duration = postDTO.getDuration();
         this.difficulty = postDTO.getDifficulty();
@@ -60,33 +61,19 @@ public class Post implements Parcelable {
         this.rate = postDTO.getRate();
         this.author = new User(postDTO.getAuthor());
 
-        /*
-        LinkedList<Review> reviewList = new LinkedList<Review>();
-
-        for(ReviewDTO reviewDTO : postDTO.getReviews()) {
-            reviewList.add(new Review(reviewDTO));
-        }
-
-        this.reviews = reviewList;
-        */
-
         this.pics = new LinkedList<>();
 
-        if(postDTO.getPics() != null) {
-            for(String base64String : postDTO.getPics()) {
+        if (postDTO.getPics() != null) {
+            for (String base64String : postDTO.getPics()) {
                 byte[] decodedBase64 = Base64.decode(base64String, Base64.DEFAULT);
                 this.pics.add(BitmapFactory.decodeByteArray(decodedBase64, 0, decodedBase64.length));
             }
-        } else {
-            // TODO: Set standard pic or fix in view
         }
 
-        if(postDTO.getRoute() != null) {
+        if (postDTO.getRoute() != null) {
             byte[] decodedBase64 = Base64.decode(postDTO.getRoute(), Base64.DEFAULT);
             String gpxXML = new String(decodedBase64);
             this.route = GPX.reader().fromString(gpxXML);
-        } else {
-            // TODO: Set standard GPX or fix in view
         }
 
     }
@@ -95,15 +82,12 @@ public class Post implements Parcelable {
         this.id = in.readLong();
         this.title = in.readString();
         String tmpDescription = in.readString();
-        if(tmpDescription != null && !tmpDescription.isEmpty()) this.description = tmpDescription;
+        if (tmpDescription != null && !tmpDescription.isEmpty()) this.description = tmpDescription;
         this.timestamp = Timestamp.valueOf(in.readString());
         String tmpTimestampString = in.readString();
-        if(tmpTimestampString != null && !tmpTimestampString.isEmpty()) this.editTimestamp = Timestamp.valueOf(tmpTimestampString);
-        if(in.readByte() == 0) {
-            this.accessibility = false;
-        } else {
-            this.accessibility = true;
-        }
+        if (tmpTimestampString != null && !tmpTimestampString.isEmpty())
+            this.editTimestamp = Timestamp.valueOf(tmpTimestampString);
+        this.accessibility = in.readByte() != 0;
         this.duration = in.readInt();
         this.difficulty = in.readInt();
         this.route = (GPX) in.readSerializable();
@@ -112,26 +96,10 @@ public class Post implements Parcelable {
 
         // in.readList(pics);
 
-        if(in.readByte() == 0) {
-            this.isReported = false;
-        } else {
-            this.isReported = true;
-        }
+        this.isReported = in.readByte() != 0;
         this.rate = in.readFloat();
         this.author = (User) in.readParcelable(User.class.getClassLoader());
     }
-
-    public static final Creator<Post> CREATOR = new Creator<Post>() {
-        @Override
-        public Post createFromParcel(Parcel in) {
-            return new Post(in);
-        }
-
-        @Override
-        public Post[] newArray(int size) {
-            return new Post[size];
-        }
-    };
 
     public Long getId() {
         return id;
@@ -260,21 +228,20 @@ public class Post implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        // TODO: FIX BOOLEAN VALUES
         dest.writeLong(id);
         dest.writeString(title);
-        if(description != null && !description.isEmpty()) {
+        if (description != null && !description.isEmpty()) {
             dest.writeString(description);
         } else {
             dest.writeString(null);
         }
         dest.writeString(timestamp.toString());
-        if(editTimestamp != null) {
+        if (editTimestamp != null) {
             dest.writeString(editTimestamp.toString());
         } else {
             dest.writeString(null);
         }
-        if(accessibility == null || accessibility == false) {
+        if (accessibility == null || accessibility == false) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
@@ -287,7 +254,7 @@ public class Post implements Parcelable {
 
         // dest.writeList(pics);
 
-        if(isReported == null || isReported == false) {
+        if (isReported == null || isReported == false) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
@@ -295,15 +262,5 @@ public class Post implements Parcelable {
         dest.writeFloat(rate);
         dest.writeParcelable(author, flags);
     }
-
-    /*
-    public LinkedList<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(LinkedList<Review> reviews) {
-        this.reviews = reviews;
-    }
-    */
 
 }

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "680076264600",
+    "project_id": "natourmaps",
+    "storage_bucket": "natourmaps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680076264600:android:ce9a0c9e0c76040685bced",
+        "android_client_info": {
+          "package_name": "edu.unina.natour21"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680076264600-tctv2lh7hro1e7f80bjt3uv5jv4apk89.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.unina.natour21",
+            "certificate_hash": "573d5b5fa6c803bf79cad351daaa0b717b75e42b"
+          }
+        },
+        {
+          "client_id": "680076264600-1k7iusb7c2bhtd4ab30kgfs2t5j338qp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB37HpNmHCgsnwNJA2kvxucJVPqnlz6RP8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680076264600-1k7iusb7c2bhtd4ab30kgfs2t5j338qp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

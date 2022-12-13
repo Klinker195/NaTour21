@@ -1,32 +1,18 @@
 package edu.unina.natour21.adapter;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,16 +20,15 @@ import java.util.Locale;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.model.FavCollection;
-import edu.unina.natour21.model.Post;
-import edu.unina.natour21.utility.NatourFileHandler;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
-import edu.unina.natour21.view.activity.PostCreationActivity;
-import edu.unina.natour21.view.activity.PostDetailsActivity;
+import edu.unina.natour21.view.activity.PostFilteringMapsActivity;
 
 public class FavCollectionAdapter extends RecyclerView.Adapter<FavCollectionAdapter.ViewHolder> {
 
+    private static final String TAG = FavCollectionAdapter.class.getSimpleName();
+
     private FavCollection[] localDataSet;
-    private FragmentManager fragmentManager;
+    private final FragmentManager fragmentManager;
 
     /*
     MODE:
@@ -59,14 +44,21 @@ public class FavCollectionAdapter extends RecyclerView.Adapter<FavCollectionAdap
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView titleTextView;
-        private ImageView iconImageView;
+        private FirebaseAnalytics firebaseAnalytics;
+
+        private final TextView titleTextView;
+        private final ImageView iconImageView;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
+            firebaseAnalytics = FirebaseAnalytics.getInstance(view.getContext());
             titleTextView = (TextView) view.findViewById(R.id.collectionCardTitleTextView);
             iconImageView = (ImageView) view.findViewById(R.id.collectionCardIconImageView);
+        }
+
+        public FirebaseAnalytics getFirebaseAnalytics() {
+            return firebaseAnalytics;
         }
 
         public TextView getTitleTextView() {
@@ -100,7 +92,7 @@ public class FavCollectionAdapter extends RecyclerView.Adapter<FavCollectionAdap
             @Override
             public void onClick(View view) {
                 Integer position = viewHolder.getAdapterPosition();
-                if(localDataSet[position].getId() != null) {
+                if (localDataSet[position].getId() != null) {
                     Bundle args = new Bundle();
                     args.putInt(ARG_NAME_COMMUNITY_1, 1);
                     args.putLong(ARG_NAME_COMMUNITY_2, localDataSet[position].getId());
@@ -124,34 +116,20 @@ public class FavCollectionAdapter extends RecyclerView.Adapter<FavCollectionAdap
         TextView titleTextView = viewHolder.getTitleTextView();
         ImageView iconImageView = viewHolder.getIconImageView();
 
-        String title = localDataSet[position].getTitle().substring(0, 1) + localDataSet[position].getTitle().toLowerCase(Locale.ROOT).substring(1);
+        String title = localDataSet[position].getTitle().charAt(0) + localDataSet[position].getTitle().toLowerCase(Locale.ROOT).substring(1);
         titleTextView.setText(title);
 
         iconImageView.setImageBitmap(null);
 
-        if(localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("FAVORITES")) {
+        if (localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("FAVORITES")) {
             iconImageView.setBackgroundResource(R.drawable.natour_fav_collection_button);
-        } else if(localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("TO VISIT")) {
+        } else if (localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("TO VISIT")) {
             iconImageView.setBackgroundResource(R.drawable.natour_visit_collection_button);
-        } else if(localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("CREATE NEW COLLECTION")) {
+        } else if (localDataSet[position].getTitle().toUpperCase(Locale.ROOT).equals("CREATE NEW COLLECTION")) {
             iconImageView.setBackgroundResource(R.drawable.natour_create_collection_button);
         } else {
             iconImageView.setBackgroundResource(R.drawable.natour_create_collection_button);
         }
-
-        /*
-        if(localDataSet[position].getTitle().equals("Favorites")) {
-            bitmap = BitmapFactory.decodeResource(fragmentManager.getPrimaryNavigationFragment().getResources(), R.drawable.natour_fav_collection_button);
-        } else if(localDataSet[position].getTitle().equals("To visit")) {
-            bitmap = BitmapFactory.decodeResource(fragmentManager.getPrimaryNavigationFragment().getResources(), R.drawable.natour_visit_collection_button);
-        } else if(localDataSet[position].getTitle().equals("Create new collection")) {
-            bitmap = BitmapFactory.decodeResource(fragmentManager.getPrimaryNavigationFragment().getResources(), R.drawable.natour_create_collection_button);
-        } else {
-            bitmap = BitmapFactory.decodeResource(fragmentManager.getPrimaryNavigationFragment().getResources(), R.drawable.natour_create_collection_button);
-        }
-
-        if(bitmap != null) iconImageView.setImageBitmap(bitmap);
-         */
 
         NatourUIDesignHandler designHandler = new NatourUIDesignHandler();
         designHandler.setTextGradient(titleTextView);

@@ -1,15 +1,9 @@
 package edu.unina.natour21.utility;
 
 import android.app.Activity;
-import android.graphics.BlendMode;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
-import android.graphics.PorterDuff;
 import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.RippleDrawable;
 import android.text.TextPaint;
 import android.util.Log;
 import android.widget.Button;
@@ -39,7 +33,7 @@ public class NatourUIDesignHandler {
         float textWidth = textPaint.measureText(textView.getText().toString());
 
         Shader textShader = new LinearGradient(0, 0, textWidth, textView.getTextSize(),
-                new int[] {
+                new int[]{
                         Color.parseColor("#1A759F"),
                         Color.parseColor("#339DA1"),
                         Color.parseColor("#6EB988")
@@ -56,11 +50,11 @@ public class NatourUIDesignHandler {
         float textWidth = textPaint.measureText(button.getText().toString());
 
         Shader textShader = new LinearGradient(0, 0, textWidth, button.getTextSize(),
-                new int[] {
-                    Color.parseColor("#1A759F"),
-                    Color.parseColor("#339DA1"),
-                    Color.parseColor("#6EB988")
-            }, null, Shader.TileMode.CLAMP);
+                new int[]{
+                        Color.parseColor("#1A759F"),
+                        Color.parseColor("#339DA1"),
+                        Color.parseColor("#6EB988")
+                }, null, Shader.TileMode.CLAMP);
 
         button.getPaint().setShader(textShader);
     }
@@ -76,7 +70,7 @@ public class NatourUIDesignHandler {
         float textWidth = textPaint.measureText(textView.getText().toString());
 
         Shader textShader = new LinearGradient(0, 0, textWidth, textView.getTextSize(),
-                new int[] {
+                new int[]{
                         Color.parseColor("#1A759F"),
                         Color.parseColor("#339DA1"),
                         Color.parseColor("#6EB988")
@@ -102,7 +96,7 @@ public class NatourUIDesignHandler {
         float textWidth = textPaint.measureText(textView.getText().toString());
 
         Shader textShader = new LinearGradient(0, 0, textWidth, textView.getTextSize(),
-                new int[] {
+                new int[]{
                         Color.parseColor("#1A759F"),
                         Color.parseColor("#339DA1"),
                         Color.parseColor("#6EB988")
@@ -128,7 +122,7 @@ public class NatourUIDesignHandler {
         float textWidth = textPaint.measureText(textView.getText().toString());
 
         Shader textShader = new LinearGradient(0, 0, textWidth, textView.getTextSize(),
-                new int[] {
+                new int[]{
                         Color.parseColor("#1A759F"),
                         Color.parseColor("#339DA1"),
                         Color.parseColor("#6EB988")

@@ -1,9 +1,6 @@
 package edu.unina.natour21.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,18 +9,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.amplifyframework.auth.AuthException;
 import com.amplifyframework.auth.result.AuthSignUpResult;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 
 import edu.unina.natour21.R;
-import edu.unina.natour21.dto.PostDTO;
 import edu.unina.natour21.dto.UserDTO;
 import edu.unina.natour21.retrofit.AmazonAPI;
-import edu.unina.natour21.retrofit.IPostAPI;
 import edu.unina.natour21.retrofit.IUserAPI;
 import edu.unina.natour21.utility.AmplifyExceptionHandler;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
@@ -33,6 +35,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class VerificationActivity extends AppCompatActivity {
+
+    private static final String TAG = VerificationActivity.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     private VerificationViewModel viewModel;
 
@@ -48,6 +54,8 @@ public class VerificationActivity extends AppCompatActivity {
 
     private IUserAPI userAPI;
 
+    private Dialog loadingDialog;
+
     @NotNull
     private long currentMillis = 300000; // 300000
     private long endMillis;
@@ -58,9 +66,11 @@ public class VerificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         // Get Bundle Data
         Bundle extras = getIntent().getExtras();
-        if(extras != null) {
+        if (extras != null) {
             email = extras.getString("email");
         }
 
@@ -107,8 +117,9 @@ public class VerificationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String verificationCode = confirmationCodeEditText.getText().toString();
                 verificationCode = verificationCode.replace(" ", "");
-                if(!verificationCode.isEmpty()) {
+                if (!verificationCode.isEmpty()) {
                     errorConfirmationCodeTextView.setVisibility(View.INVISIBLE);
+                    showLoadingDialog();
                     viewModel.signUpConfirmation(email, verificationCode);
                 } else {
                     errorConfirmationCodeTextView.setVisibility(View.VISIBLE);
@@ -153,40 +164,50 @@ public class VerificationActivity extends AppCompatActivity {
         viewModel.getOnSignUpConfirmationSuccess().observe(this, new Observer<AuthSignUpResult>() {
             @Override
             public void onChanged(AuthSignUpResult authSignUpResult) {
-                // TODO: If there aren't infos about user, go to registration form activity
-                Call<UserDTO> call = userAPI.getUserByEmail(authSignUpResult.getUser().getUsername().replace(" ", "").toLowerCase());
-                call.enqueue(new Callback<UserDTO>() {
-                    @Override
-                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                        UserDTO userDTO = response.body();
+                dismissLoadingDialog();
+                Intent switchActivityIntent = new Intent(VerificationActivity.this, AuthenticationActivity.class);
+                startActivity(switchActivityIntent);
+                finish();
+                Toast.makeText(VerificationActivity.this, "Verification success, please login again using credentials",
+                        Toast.LENGTH_SHORT).show();
+                /*
+                if(email != null) {
+                    Call<UserDTO> call = userAPI.getUserByEmail(email.replace(" ", "").toLowerCase());
+                    call.enqueue(new Callback<UserDTO>() {
+                        @Override
+                        public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                            UserDTO userDTO = response.body();
 
-                        if(userDTO == null) {
-                            Intent switchActivityIntent = new Intent(VerificationActivity.this, RegistrationFormActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putString("email", email.replace(" ", "").toLowerCase());
-                            switchActivityIntent.putExtras(bundle);
-                            startActivity(switchActivityIntent);
-                            finish();
+                            dismissLoadingDialog();
+
+                            if(userDTO == null) {
+                                Intent switchActivityIntent = new Intent(VerificationActivity.this, RegistrationFormActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("email", email.replace(" ", "").toLowerCase());
+                                switchActivityIntent.putExtras(bundle);
+                                startActivity(switchActivityIntent);
+                                finish();
+                            }
                         }
 
-                        // TODO: Go to dashboard
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserDTO> call, Throwable t) {
-                        Log.e("AmazonAPI", "Request failed");
-                        Intent switchActivityIntent = new Intent(VerificationActivity.this, AuthenticationActivity.class);
-                        startActivity(switchActivityIntent);
-                        viewModel.signOut();
-                        finish();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<UserDTO> call, Throwable t) {
+                            Log.e("AmazonAPI", "Request failed");
+                            Intent switchActivityIntent = new Intent(VerificationActivity.this, AuthenticationActivity.class);
+                            startActivity(switchActivityIntent);
+                            viewModel.signOut();
+                            finish();
+                        }
+                    });
+                }
+                */
             }
         });
 
         viewModel.getOnSignUpConfirmationFailure().observe(this, new Observer<AuthException>() {
             @Override
             public void onChanged(AuthException error) {
+                dismissLoadingDialog();
                 errorConfirmationCodeTextView.setVisibility(View.VISIBLE);
                 AmplifyExceptionHandler exceptionHandler = new AmplifyExceptionHandler();
                 errorConfirmationCodeTextView.setText(exceptionHandler.getStringFromAuthException(error));
@@ -222,9 +243,30 @@ public class VerificationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        viewModel.signOut();
         Intent intent = new Intent(this, AuthenticationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    private void showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = new Dialog(this);
+        }
+        loadingDialog.setCancelable(false);
+        loadingDialog.setContentView(R.layout.popup_loading);
+
+        ProgressBar loadingDialogProgressBar = (ProgressBar) findViewById(R.id.popupLoadingProgressBar);
+
+        loadingDialog.show();
+    }
+
+    private void dismissLoadingDialog() {
+        if (loadingDialog != null) {
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+        }
     }
 
 }

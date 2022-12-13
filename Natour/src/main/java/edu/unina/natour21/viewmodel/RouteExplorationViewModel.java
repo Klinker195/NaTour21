@@ -30,13 +30,17 @@ import edu.unina.natour21.retrofit.AmazonAPI;
 import edu.unina.natour21.retrofit.IFavCollectionAPI;
 import edu.unina.natour21.retrofit.IPostAPI;
 import edu.unina.natour21.retrofit.IUserAPI;
+import edu.unina.natour21.view.activity.PostFilteringMapsActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RouteExplorationViewModel extends ViewModel {
+public class RouteExplorationViewModel extends ViewModelBase {
 
-    public final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = RouteExplorationViewModel.class.getSimpleName();
+
+    private final MutableLiveData<Post> onRandomPostFetchSuccess = new MutableLiveData<Post>();
+    private final MutableLiveData<Void> onRandomPostFetchFailure = new MutableLiveData<Void>();
 
     private final MutableLiveData<Post[]> onPostFetchSuccess = new MutableLiveData<Post[]>();
     private final MutableLiveData<Post[]> onPostFetchFailure = new MutableLiveData<Post[]>();
@@ -53,44 +57,11 @@ public class RouteExplorationViewModel extends ViewModel {
     private final MutableLiveData<Void> onCurrentUserFavCollectionFailure = new MutableLiveData<Void>();
     private ArrayList<FavCollection> userFavCollections = new ArrayList<FavCollection>();
 
-    public void setFragment(Fragment fragment, FragmentTransaction fragmentTransaction) {
-        fragmentTransaction.replace(R.id.routeExplorationFragment, fragment, "RouteExploration");
-        fragmentTransaction.commit();
-    }
-
-    public void getPostByRange(Long startRange, Long endRange) {
-        IPostAPI postAPI = AmazonAPI.getClient().create(IPostAPI.class);
-        Call<List<PostDTO>> postCall = postAPI.getPostByRange(startRange, endRange);
-
-        LinkedList<Post> postLinkedList = new LinkedList<Post>();
-
-        postCall.enqueue(new Callback<List<PostDTO>>() {
-            @Override
-            public void onResponse(Call<List<PostDTO>> call, Response<List<PostDTO>> response) {
-                if(response.body() != null) {
-                    Log.i(TAG, "Post call success");
-                    LinkedList<PostDTO> responsePostDTOLinkedList = new LinkedList<PostDTO>(response.body());
-                    for(PostDTO postDTO : responsePostDTOLinkedList) {
-                        postLinkedList.add(new Post(postDTO));
-                    }
-                    onPostFetchSuccess(postLinkedList.toArray(new Post[postLinkedList.size()]));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<PostDTO>> call, Throwable t) {
-                onPostFetchSuccess(new Post[0]);
-                Log.e(TAG, "Post call failure");
-                t.printStackTrace();
-            }
-        });
-    }
-
     public void getCurrentUser() {
         Amplify.Auth.fetchUserAttributes(new Consumer<List<AuthUserAttribute>>() {
             @Override
             public void accept(@NonNull List<AuthUserAttribute> attributes) {
-                for(AuthUserAttribute value : attributes) {
+                for (AuthUserAttribute value : attributes) {
                     if (value.getKey().getKeyString().equals("email")) {
                         String email = value.getValue().replace(" ", "");
                         IUserAPI userAPI = AmazonAPI.getClient().create(IUserAPI.class);
@@ -99,7 +70,7 @@ public class RouteExplorationViewModel extends ViewModel {
                         userCall.enqueue(new Callback<UserDTO>() {
                             @Override
                             public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                                if(response.body() != null) {
+                                if (response.body() != null) {
                                     onCurrentUserFetchSuccess(new User(response.body()));
                                 } else {
                                     onCurrentUserFetchFailure();
@@ -129,10 +100,10 @@ public class RouteExplorationViewModel extends ViewModel {
         favCollectionCall.enqueue(new Callback<List<FavCollectionDTO>>() {
             @Override
             public void onResponse(Call<List<FavCollectionDTO>> call, Response<List<FavCollectionDTO>> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     ArrayList<FavCollectionDTO> favCollectionDTOArrayList = new ArrayList<FavCollectionDTO>(response.body());
                     ArrayList<FavCollection> favCollectionArrayList = new ArrayList<FavCollection>();
-                    for(FavCollectionDTO favCollectionDTO : favCollectionDTOArrayList) {
+                    for (FavCollectionDTO favCollectionDTO : favCollectionDTOArrayList) {
                         favCollectionArrayList.add(new FavCollection(favCollectionDTO));
                     }
                     userFavCollections = favCollectionArrayList;
@@ -162,10 +133,10 @@ public class RouteExplorationViewModel extends ViewModel {
         userCall.enqueue(new Callback<List<UserDTO>>() {
             @Override
             public void onResponse(Call<List<UserDTO>> call, Response<List<UserDTO>> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     Log.i(TAG, "User call success");
                     LinkedList<UserDTO> responseUserDTOLinkedList = new LinkedList<UserDTO>(response.body());
-                    for(UserDTO userDTO : responseUserDTOLinkedList) {
+                    for (UserDTO userDTO : responseUserDTOLinkedList) {
                         userLinkedList.add(new User(userDTO));
                     }
                     onUserFetchSuccess(userLinkedList.toArray(new User[userLinkedList.size()]));
@@ -178,6 +149,40 @@ public class RouteExplorationViewModel extends ViewModel {
             public void onFailure(Call<List<UserDTO>> call, Throwable t) {
                 onUserFetchFailure(new User[0]);
                 Log.e(TAG, "User call failure");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void getPostsByCollectionIdWithPaging(Integer page, Integer pageSize, Long collectionId) {
+        IPostAPI postAPI = AmazonAPI.getClient().create(IPostAPI.class);
+        Call<List<PostDTO>> postCall = postAPI.getPostsByCollectionId(page, pageSize, collectionId);
+
+        Log.i(TAG, collectionId.toString());
+
+        Log.i(TAG, postCall.request().toString());
+
+        LinkedList<Post> postLinkedList = new LinkedList<Post>();
+
+        postCall.enqueue(new Callback<List<PostDTO>>() {
+            @Override
+            public void onResponse(Call<List<PostDTO>> call, Response<List<PostDTO>> response) {
+                if (response.body() != null) {
+                    Log.i(TAG, "Post call success");
+                    LinkedList<PostDTO> responsePostDTOLinkedList = new LinkedList<PostDTO>(response.body());
+                    for (PostDTO postDTO : responsePostDTOLinkedList) {
+                        postLinkedList.add(new Post(postDTO));
+                    }
+                    onPostFetchSuccess(postLinkedList.toArray(new Post[postLinkedList.size()]));
+                } else {
+                    onPostFetchFailure(new Post[0]);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PostDTO>> call, Throwable t) {
+                onPostFetchFailure(new Post[0]);
+                Log.e(TAG, "Post call failure");
                 t.printStackTrace();
             }
         });
@@ -196,10 +201,10 @@ public class RouteExplorationViewModel extends ViewModel {
         postCall.enqueue(new Callback<List<PostDTO>>() {
             @Override
             public void onResponse(Call<List<PostDTO>> call, Response<List<PostDTO>> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     Log.i(TAG, "Post call success");
                     LinkedList<PostDTO> responsePostDTOLinkedList = new LinkedList<PostDTO>(response.body());
-                    for(PostDTO postDTO : responsePostDTOLinkedList) {
+                    for (PostDTO postDTO : responsePostDTOLinkedList) {
                         postLinkedList.add(new Post(postDTO));
                     }
                     onPostFetchSuccess(postLinkedList.toArray(new Post[postLinkedList.size()]));
@@ -215,6 +220,39 @@ public class RouteExplorationViewModel extends ViewModel {
                 t.printStackTrace();
             }
         });
+    }
+
+    public void getRandomPost() {
+        IPostAPI postAPI = AmazonAPI.getClient().create(IPostAPI.class);
+        Call<PostDTO> postCall = postAPI.getRandomPost();
+
+        postCall.enqueue(new Callback<PostDTO>() {
+            @Override
+            public void onResponse(Call<PostDTO> call, Response<PostDTO> response) {
+                if (response.body() != null) {
+                    Log.i(TAG, "Post call success");
+                    onRandomPostFetchSuccess(new Post(response.body()));
+                } else {
+                    onRandomPostFetchFailure();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostDTO> call, Throwable t) {
+                onRandomPostFetchFailure();
+                Log.e(TAG, "Post call failure");
+                t.printStackTrace();
+            }
+        });
+    }
+
+
+    private void onRandomPostFetchSuccess(Post post) {
+        onRandomPostFetchSuccess.postValue(post);
+    }
+
+    private void onRandomPostFetchFailure() {
+        onRandomPostFetchFailure.postValue(null);
     }
 
     private void onCurrentUserFavCollectionSuccess(ArrayList<FavCollection> favCollectionArrayList) {
@@ -235,7 +273,7 @@ public class RouteExplorationViewModel extends ViewModel {
 
     private void onPostFetchSuccess(Post[] postArray) {
         Post[] resultPostArray = posts;
-        if(postArray.length != 0) {
+        if (postArray.length != 0) {
             List<Post> list = new ArrayList<Post>(Arrays.asList(posts));
             list.addAll(Arrays.asList(postArray));
             resultPostArray = list.toArray(new Post[list.size()]);
@@ -246,7 +284,7 @@ public class RouteExplorationViewModel extends ViewModel {
 
     private void onUserFetchSuccess(User[] userArray) {
         User[] resultUserArray = users;
-        if(userArray.length != 0) {
+        if (userArray.length != 0) {
             List<User> list = new ArrayList<User>(Arrays.asList(users));
             list.addAll(Arrays.asList(userArray));
             resultUserArray = list.toArray(new User[list.size()]);
@@ -261,6 +299,15 @@ public class RouteExplorationViewModel extends ViewModel {
 
     private void onUserFetchFailure(User[] userArray) {
         onUserFetchFailure.postValue(users);
+    }
+
+
+    public LiveData<Post> getOnRandomPostFetchSuccess() {
+        return onRandomPostFetchSuccess;
+    }
+
+    public LiveData<Void> getOnRandomPostFetchFailure() {
+        return onRandomPostFetchFailure;
     }
 
     public LiveData<ArrayList<FavCollection>> getOnCurrentUserFavCollectionSuccess() {
@@ -294,6 +341,8 @@ public class RouteExplorationViewModel extends ViewModel {
     public LiveData<User[]> getOnUserFetchFailure() {
         return onUserFetchFailure;
     }
+
+
 
     public void setPosts(Post[] posts) {
         this.posts = posts;

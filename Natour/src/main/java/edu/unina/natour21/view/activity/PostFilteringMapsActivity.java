@@ -26,15 +26,12 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
@@ -45,12 +42,15 @@ import edu.unina.natour21.utility.NatourUIDesignHandler;
 public class PostFilteringMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = PostFilteringMapsActivity.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
+
     private GoogleMap map;
     private CameraPosition cameraPosition;
 
     private LatLng selectedPoint;
     private Circle areaCircle;
-    
+
     // The entry point to the Places API.
     private PlacesClient placesClient;
 
@@ -78,6 +78,9 @@ public class PostFilteringMapsActivity extends AppCompatActivity implements OnMa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_post_filtering_maps);
 
@@ -137,7 +140,7 @@ public class PostFilteringMapsActivity extends AppCompatActivity implements OnMa
             @Override
             public void onMapClick(LatLng point) {
                 map.clear();
-                if(areaCircle != null) areaCircle.remove();
+                if (areaCircle != null) areaCircle.remove();
 
                 selectedPoint = null;
                 areaCircle = null;
@@ -158,15 +161,6 @@ public class PostFilteringMapsActivity extends AppCompatActivity implements OnMa
             }
         });
 
-
-        /*
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        googleMap.addMarker(new MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-         */
-
         getLocationPermission();
 
         // Turn on the My Location layer and the related control on the map.
@@ -185,9 +179,9 @@ public class PostFilteringMapsActivity extends AppCompatActivity implements OnMa
     }
 
     private void redrawCircle() {
-        if(areaCircle != null) areaCircle.remove();
+        if (areaCircle != null) areaCircle.remove();
 
-        if(selectedPoint != null) {
+        if (selectedPoint != null) {
             PolylineOptions polylineOptions = new PolylineOptions();
             CircleOptions circleOptions = new CircleOptions();
 
@@ -246,8 +240,8 @@ public class PostFilteringMapsActivity extends AppCompatActivity implements OnMa
                 lastKnownLocation = null;
                 getLocationPermission();
             }
-        } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+        } catch (SecurityException e) {
+            Log.e(TAG, "Exception: %s" + e.getMessage());
         }
     }
 
@@ -280,8 +274,8 @@ public class PostFilteringMapsActivity extends AppCompatActivity implements OnMa
                     }
                 });
             }
-        } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage(), e);
+        } catch (SecurityException e) {
+            Log.e(TAG, "Exception: %s"+ e.getMessage(), e);
         }
     }
 }

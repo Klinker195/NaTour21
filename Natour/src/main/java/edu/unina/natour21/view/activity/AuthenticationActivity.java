@@ -1,45 +1,37 @@
 package edu.unina.natour21.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.amplifyframework.auth.AuthException;
-import com.amplifyframework.auth.AuthProvider;
-import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin;
-import com.amplifyframework.auth.options.AuthSignOutOptions;
 import com.amplifyframework.auth.result.AuthResetPasswordResult;
 import com.amplifyframework.auth.result.AuthSignInResult;
 import com.amplifyframework.auth.result.step.AuthSignInStep;
 import com.amplifyframework.core.Amplify;
-
-import java.io.IOException;
-import java.util.Locale;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import edu.unina.natour21.R;
-import edu.unina.natour21.dto.UserDTO;
-import edu.unina.natour21.retrofit.AmazonAPI;
-import edu.unina.natour21.retrofit.IUserAPI;
 import edu.unina.natour21.utility.AmplifyExceptionHandler;
 import edu.unina.natour21.utility.KeyboardHandler;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
 import edu.unina.natour21.viewmodel.AuthenticationViewModel;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AuthenticationActivity extends AppCompatActivity {
+
+    private static final String TAG = AuthenticationActivity.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     private AuthenticationViewModel viewModel;
 
@@ -55,8 +47,18 @@ public class AuthenticationActivity extends AppCompatActivity {
     private Dialog loadingDialog;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        KeyboardHandler.hideKeyboard(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        KeyboardHandler.hideKeyboard(this);
 
         // Retrofit API declaration
         // userAPI = AmazonAPI.getClient().create(IUserAPI.class);
@@ -102,7 +104,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 email = email.replace(" ", "").toLowerCase();
                 emailEditTextView.setText(email);
                 String password = passwordEditTextView.getText().toString();
-                if(viewModel.checkFieldsValidity(email, password)) {
+                if (viewModel.checkEmailAndPasswordValidity(email, password)) {
                     showLoadingDialog();
                     viewModel.signIn(email, password);
                 } else {
@@ -135,7 +137,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 String email = emailEditTextView.getText().toString();
                 email = email.replace(" ", "").toLowerCase();
                 emailEditTextView.setText(email);
-                if(viewModel.checkEmailFieldValidity(email)) {
+                if (viewModel.checkEmailValidity(email)) {
                     showLoadingDialog();
                     viewModel.sendResetPasswordRequest(email);
                 } else {
@@ -166,18 +168,21 @@ public class AuthenticationActivity extends AppCompatActivity {
                 AuthSignInStep signInStep = authSignInResult.getNextStep().getSignInStep();
                 errorTextView.setVisibility(View.INVISIBLE);
 
-                if(signInStep == AuthSignInStep.RESET_PASSWORD) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Amplify login");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+
+                if (signInStep == AuthSignInStep.RESET_PASSWORD) {
                     String email = emailEditTextView.getText().toString();
                     email = email.replace(" ", "").toLowerCase();
                     emailEditTextView.setText(email);
-                    if(viewModel.checkEmailFieldValidity(email)) {
+                    if (viewModel.checkEmailValidity(email)) {
                         viewModel.sendResetPasswordRequest(email);
                     } else {
                         errorTextView.setVisibility(View.VISIBLE);
                         errorTextView.setText("Email is incorrect.");
                     }
-                } else if(signInStep == AuthSignInStep.DONE) {
-                    // TODO Start main app (dashboard)
+                } else if (signInStep == AuthSignInStep.DONE) {
                     emailEditTextView.setText("");
                     passwordEditTextView.setText("");
                     Log.i("AmplifyLogin", Amplify.Auth.getCurrentUser().toString());
@@ -196,7 +201,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 errorTextView.setVisibility(View.VISIBLE);
                 passwordEditTextView.setText("");
 
-                if(error instanceof AuthException.UserNotConfirmedException) {
+                if (error instanceof AuthException.UserNotConfirmedException) {
                     errorTextView.setVisibility(View.INVISIBLE);
                     Log.i("Amplify", "Sign-Up confirmation needed");
                     Intent switchActivityIntent = new Intent(AuthenticationActivity.this, VerificationActivity.class);
@@ -220,19 +225,21 @@ public class AuthenticationActivity extends AppCompatActivity {
                 AuthSignInStep signInStep = authSignInResult.getNextStep().getSignInStep();
                 errorTextView.setVisibility(View.INVISIBLE);
 
-                if(signInStep == AuthSignInStep.RESET_PASSWORD) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "User Amplify Google login");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+
+                if (signInStep == AuthSignInStep.RESET_PASSWORD) {
                     String email = emailEditTextView.getText().toString();
                     email = email.replace(" ", "").toLowerCase();
                     emailEditTextView.setText(email);
-                    if(viewModel.checkEmailFieldValidity(email)) {
+                    if (viewModel.checkEmailValidity(email)) {
                         viewModel.sendResetPasswordRequest(email);
                     } else {
                         errorTextView.setVisibility(View.VISIBLE);
                         errorTextView.setText("Email is incorrect.");
                     }
-                } else if(signInStep == AuthSignInStep.DONE) {
-                    // TODO Start main app (dashboard)
-                    // TODO: If there aren't infos about user, go to registration form activity
+                } else if (signInStep == AuthSignInStep.DONE) {
                     emailEditTextView.setText("");
                     passwordEditTextView.setText("");
                     Log.i("AmplifyGoogleLogin", Amplify.Auth.getCurrentUser().toString());
@@ -298,7 +305,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void showLoadingDialog() {
-        if(loadingDialog == null) {
+        if (loadingDialog == null) {
             loadingDialog = new Dialog(this);
         }
         loadingDialog.setCancelable(false);
@@ -310,36 +317,11 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void dismissLoadingDialog() {
-        if(loadingDialog != null) {
-            if(loadingDialog.isShowing()) {
+        if (loadingDialog != null) {
+            if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
         }
     }
-
-    /*
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Amplify.Auth.handleWebUISignInResponse(intent);
-    }
-    */
-
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (requestCode == AWSCognitoAuthPlugin.WEB_UI_SIGN_IN_ACTIVITY_CODE) {
-                    Amplify.Auth.handleWebUISignInResponse(data);
-                }
-            }
-        }).start();
-
-    }
-     */
 }
 

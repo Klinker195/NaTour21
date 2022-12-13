@@ -14,7 +14,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/redhattext_regular"
-        android:text="Where do you want to save the post?"
+        android:text="Tap to add to a collection.\nLong tap to remove from collection."
         android:textAlignment="center"
         android:textColor="@color/lightgrey_text"
         android:textSize="20sp"

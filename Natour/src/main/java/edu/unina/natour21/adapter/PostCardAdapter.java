@@ -1,9 +1,7 @@
 package edu.unina.natour21.adapter;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +10,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.model.Post;
 import edu.unina.natour21.utility.NatourFileHandler;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
-import edu.unina.natour21.view.activity.PostCreationActivity;
 import edu.unina.natour21.view.activity.PostDetailsActivity;
 
 public class PostCardAdapter extends RecyclerView.Adapter<PostCardAdapter.ViewHolder> {
+
+    private static final String TAG = PostCardAdapter.class.getSimpleName();
 
     private Post[] localDataSet;
 
@@ -38,20 +33,24 @@ public class PostCardAdapter extends RecyclerView.Adapter<PostCardAdapter.ViewHo
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView picImageView;
-        private ImageView reportImageView;
-        private ImageView accessibilityImageView;
-        private TextView titleTextView;
-        private TextView authorTextView;
-        private TextView durationTextView;
-        private LinearLayout difficultyLinearLayout;
-        private FloatingActionButton reportBackgroundButton;
-        private FloatingActionButton accessibilityBackgroundButton;
-        private Button rateBackgroundButton;
+        private FirebaseAnalytics firebaseAnalytics;
+
+        private final ImageView picImageView;
+        private final ImageView reportImageView;
+        private final ImageView accessibilityImageView;
+        private final TextView titleTextView;
+        private final TextView authorTextView;
+        private final TextView durationTextView;
+        private final LinearLayout difficultyLinearLayout;
+        private final FloatingActionButton reportBackgroundButton;
+        private final FloatingActionButton accessibilityBackgroundButton;
+        private final Button rateBackgroundButton;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
+
+            firebaseAnalytics = FirebaseAnalytics.getInstance(view.getContext());
 
             picImageView = (ImageView) view.findViewById(R.id.postCardPicImageView);
             accessibilityImageView = (ImageView) view.findViewById(R.id.postCardAccessibilityImageView);
@@ -66,6 +65,10 @@ public class PostCardAdapter extends RecyclerView.Adapter<PostCardAdapter.ViewHo
 
             NatourUIDesignHandler designHandler = new NatourUIDesignHandler();
             designHandler.setTextGradient(rateBackgroundButton);
+        }
+
+        public FirebaseAnalytics getFirebaseAnalytics() {
+            return firebaseAnalytics;
         }
 
         public ImageView getPicImageView() {
@@ -113,7 +116,7 @@ public class PostCardAdapter extends RecyclerView.Adapter<PostCardAdapter.ViewHo
      * Initialize the dataset of the Adapter.
      *
      * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
+     *                by RecyclerView.
      */
     public PostCardAdapter(Post[] dataSet) {
         localDataSet = dataSet;
@@ -130,16 +133,20 @@ public class PostCardAdapter extends RecyclerView.Adapter<PostCardAdapter.ViewHo
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("[VIEWHOLDER CLICK TEST]", viewHolder.getAdapterPosition() + "");
-                // TODO: Post Details Activity
                 Integer position = viewHolder.getAdapterPosition();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, localDataSet[position].getId().toString());
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, localDataSet[position].getTitle());
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Post details");
+                viewHolder.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
                 Intent switchActivityIntent = new Intent(view.getContext(), PostDetailsActivity.class);
                 switchActivityIntent.putExtra("postDetails", localDataSet[position]);
 
                 String[] picsArray = new String[localDataSet[position].getPics().size()];
                 NatourFileHandler fileHandler = new NatourFileHandler();
-                for(int i = 0; i < localDataSet[position].getPics().size(); i++) {
+                for (int i = 0; i < localDataSet[position].getPics().size(); i++) {
                     picsArray[i] = fileHandler.createImageFromBitmap(view.getContext(), localDataSet[position].getPics().get(0));
                 }
                 switchActivityIntent.putExtra("postPics", picsArray);
@@ -164,9 +171,13 @@ public class PostCardAdapter extends RecyclerView.Adapter<PostCardAdapter.ViewHo
 
         viewHolder.getTitleTextView().setText(localDataSet[position].getTitle());
 
-        viewHolder.getPicImageView().setImageBitmap(localDataSet[position].getPics().get(0));
+        if(!localDataSet[position].getPics().isEmpty() && localDataSet[position].getPics().get(0) != null) {
+            viewHolder.getPicImageView().setImageBitmap(localDataSet[position].getPics().get(0));
+        } else {
+            viewHolder.getPicImageView().setImageResource(R.drawable.standard_route_pic);
+        }
 
-        if(localDataSet[position].getReported()) {
+        if (localDataSet[position].getReported()) {
             viewHolder.getReportImageView().setVisibility(View.VISIBLE);
             viewHolder.getReportBackgroundButton().setVisibility(View.VISIBLE);
         } else {
@@ -174,7 +185,7 @@ public class PostCardAdapter extends RecyclerView.Adapter<PostCardAdapter.ViewHo
             viewHolder.getReportBackgroundButton().setVisibility(View.GONE);
         }
 
-        if(localDataSet[position].getAccessibility()) {
+        if (localDataSet[position].getAccessibility()) {
             viewHolder.getAccessibilityImageView().setVisibility(View.VISIBLE);
             viewHolder.getAccessibilityBackgroundButton().setVisibility(View.VISIBLE);
         } else {
@@ -186,24 +197,24 @@ public class PostCardAdapter extends RecyclerView.Adapter<PostCardAdapter.ViewHo
 
         viewHolder.getDurationTextView().setText(localDataSet[position].getDuration() + "'");
 
-        for(int i = 0; i < viewHolder.getDifficultyLinearLayout().getChildCount(); i++) {
-            if(i < localDataSet[position].getDifficulty()) {
+        for (int i = 0; i < viewHolder.getDifficultyLinearLayout().getChildCount(); i++) {
+            if (i < localDataSet[position].getDifficulty()) {
                 viewHolder.getDifficultyLinearLayout().getChildAt(i).setVisibility(View.VISIBLE);
             } else {
                 viewHolder.getDifficultyLinearLayout().getChildAt(i).setVisibility(View.GONE);
             }
         }
 
-        if(localDataSet[position].getReported()) {
-            // TODO: Enable Report Tag
+        /*
+        if (localDataSet[position].getReported()) {
+            // Could add report button on post details
         }
+        */
 
-        // TODO: Review functionality
         viewHolder.getRateBackgroundButton().setVisibility(View.GONE);
         viewHolder.getRateBackgroundButton().setText(localDataSet[position].getRate().toString());
         NatourUIDesignHandler designHandler = new NatourUIDesignHandler();
         designHandler.setTextGradient(viewHolder.getRateBackgroundButton());
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -3,9 +3,9 @@ package edu.unina.natour21.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.location.Location;
 import android.view.View;
 import android.widget.Button;
 
@@ -30,15 +30,14 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 import edu.unina.natour21.R;
-import edu.unina.natour21.utility.NatourResourceHandler;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
 
 /**
@@ -47,34 +46,30 @@ import edu.unina.natour21.utility.NatourUIDesignHandler;
 public class PostCreationMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = PostCreationMapsActivity.class.getSimpleName();
-    private GoogleMap map;
-    private CameraPosition cameraPosition;
 
-    private LinkedList<Marker> markerLinkedList;
-    private LinkedList<LatLng> pointLinkedList;
-    private Polyline routePolyline;
-    
-    // The entry point to the Places API.
-    private PlacesClient placesClient;
+    private FirebaseAnalytics firebaseAnalytics;
 
-    // The entry point to the Fused Location Provider.
-    private FusedLocationProviderClient fusedLocationProviderClient;
-
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
-    private final LatLng defaultLocation = new LatLng(-33.8523341, 151.2106085);
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private boolean locationPermissionGranted;
-
-    // The geographical location where the device is currently located. That is, the last-known
-    // location retrieved by the Fused Location Provider.
-    private Location lastKnownLocation;
-
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
-
+    // A default location (Sydney, Australia) and default zoom to use when location permission is
+    // not granted.
+    private final LatLng defaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private GoogleMap map;
+    private CameraPosition cameraPosition;
+    private LinkedList<Marker> markerLinkedList;
+    private LinkedList<LatLng> pointLinkedList;
+    private Polyline routePolyline;
+    // The entry point to the Places API.
+    private PlacesClient placesClient;
+    // The entry point to the Fused Location Provider.
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private boolean locationPermissionGranted;
+    // The geographical location where the device is currently located. That is, the last-known
+    // location retrieved by the Fused Location Provider.
+    private Location lastKnownLocation;
     private Button doneButton;
     private Button clearButton;
 
@@ -83,6 +78,8 @@ public class PostCreationMapsActivity extends AppCompatActivity implements OnMap
         super.onCreate(savedInstanceState);
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_post_creation_maps);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
         placesClient = Places.createClient(this);
@@ -141,20 +138,20 @@ public class PostCreationMapsActivity extends AppCompatActivity implements OnMap
         markerLinkedList = new LinkedList<Marker>();
 
         Intent data = getIntent();
-        if(data.getParcelableArrayListExtra("pointArrayList") != null) {
+        if (data.getParcelableArrayListExtra("pointArrayList") != null) {
             pointLinkedList = new LinkedList<LatLng>(data.getParcelableArrayListExtra("pointArrayList"));
         }
 
 
-        if(pointLinkedList != null && !pointLinkedList.isEmpty()) {
+        if (pointLinkedList != null && !pointLinkedList.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int hue;
 
-            for(LatLng point : pointLinkedList) {
+            for (LatLng point : pointLinkedList) {
                 hue = 147;
-                if(markerLinkedList.size() == 0) hue = 188;
+                if (markerLinkedList.size() == 0) hue = 188;
                 Marker tmpMarker = map.addMarker(new MarkerOptions().position(point).icon(BitmapDescriptorFactory.defaultMarker(hue)));
-                if(markerLinkedList.size() == 0) {
+                if (markerLinkedList.size() == 0) {
                     tmpMarker.setTitle("Start");
                     tmpMarker.showInfoWindow();
                 }
@@ -179,9 +176,9 @@ public class PostCreationMapsActivity extends AppCompatActivity implements OnMap
             @Override
             public void onMapClick(LatLng point) {
                 int hue = 147;
-                if(markerLinkedList.size() == 0 && pointLinkedList.size() == 0) hue = 188;
+                if (markerLinkedList.size() == 0 && pointLinkedList.size() == 0) hue = 188;
                 Marker tmpMarker = map.addMarker(new MarkerOptions().position(point).icon(BitmapDescriptorFactory.defaultMarker(hue)));
-                if(markerLinkedList.size() == 0 && pointLinkedList.size() == 0) {
+                if (markerLinkedList.size() == 0 && pointLinkedList.size() == 0) {
                     tmpMarker.setTitle("Start");
                     tmpMarker.showInfoWindow();
                 }
@@ -195,30 +192,21 @@ public class PostCreationMapsActivity extends AppCompatActivity implements OnMap
             @Override
             public boolean onMarkerClick(Marker marker) {
                 marker.remove();
-                for(int i = 0; i < pointLinkedList.size(); i++) {
-                    if(pointLinkedList.get(i).equals(marker.getPosition())) {
+                for (int i = 0; i < pointLinkedList.size(); i++) {
+                    if (pointLinkedList.get(i).equals(marker.getPosition())) {
                         markerLinkedList.remove(i);
                         pointLinkedList.remove(i);
                     }
-                    if(i == 0 && pointLinkedList.size() != 0 && markerLinkedList.size() != 0) {
+                    if (i == 0 && pointLinkedList.size() != 0 && markerLinkedList.size() != 0) {
                         Marker tmpMarker = map.addMarker(new MarkerOptions().position(markerLinkedList.getFirst().getPosition()).icon(BitmapDescriptorFactory.defaultMarker(188)));
                         markerLinkedList.set(0, tmpMarker).remove();
-                        if(tmpMarker != null) tmpMarker.setTitle("Start");
+                        if (tmpMarker != null) tmpMarker.setTitle("Start");
                     }
                 }
                 redrawPolyline();
                 return true;
             }
         });
-
-
-        /*
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        googleMap.addMarker(new MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-         */
 
         getLocationPermission();
 
@@ -238,10 +226,10 @@ public class PostCreationMapsActivity extends AppCompatActivity implements OnMap
     }
 
     private void redrawPolyline() {
-        if(routePolyline != null) routePolyline.remove();
+        if (routePolyline != null) routePolyline.remove();
         PolylineOptions polylineOptions = new PolylineOptions();
 
-        for(LatLng point: pointLinkedList) {
+        for (LatLng point : pointLinkedList) {
             polylineOptions.add(point);
         }
 
@@ -297,8 +285,8 @@ public class PostCreationMapsActivity extends AppCompatActivity implements OnMap
                 lastKnownLocation = null;
                 getLocationPermission();
             }
-        } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+        } catch (SecurityException e) {
+            Log.e(TAG, "Exception: %s" + e.getMessage());
         }
     }
 
@@ -331,8 +319,8 @@ public class PostCreationMapsActivity extends AppCompatActivity implements OnMap
                     }
                 });
             }
-        } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage(), e);
+        } catch (SecurityException e) {
+            Log.e(TAG, "Exception: %s" + e.getMessage(), e);
         }
     }
 }

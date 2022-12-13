@@ -1,25 +1,30 @@
 package edu.unina.natour21.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.amplifyframework.core.Amplify;
+import androidx.appcompat.app.AppCompatActivity;
 
-import edu.unina.natour21.R;
+import com.amplifyframework.core.Amplify;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class LogoutCallbackActivity extends AppCompatActivity {
+
+    private static final String TAG = LogoutCallbackActivity.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_google_login_failure);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         Amplify.Auth.handleWebUISignInResponse(getIntent());
 
-        if(Amplify.Auth.getCurrentUser() != null) Log.i("AmplifyGoogle", Amplify.Auth.getCurrentUser().getUsername());
+        if (Amplify.Auth.getCurrentUser() != null)
+            Log.i("AmplifyGoogle", Amplify.Auth.getCurrentUser().getUsername());
 
         Intent switchActivityIntent = new Intent(LogoutCallbackActivity.this, AuthenticationActivity.class);
         finish();

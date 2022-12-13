@@ -21,7 +21,7 @@ public class FavCollection {
 
         posts = new LinkedList<Post>();
 
-        for(PostDTO postDTO : favCollectionDTO.getPosts()) {
+        for (PostDTO postDTO : favCollectionDTO.getPosts()) {
             posts.add(new Post(postDTO));
         }
     }

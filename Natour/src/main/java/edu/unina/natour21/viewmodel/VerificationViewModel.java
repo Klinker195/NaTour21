@@ -7,29 +7,25 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.amazonaws.mobileconnectors.cognitoauth.Auth;
 import com.amplifyframework.auth.AuthException;
 import com.amplifyframework.auth.result.AuthSignUpResult;
 import com.amplifyframework.core.Amplify;
 
-public class VerificationViewModel extends ViewModel {
+import edu.unina.natour21.view.activity.PostFilteringMapsActivity;
+import edu.unina.natour21.view.activity.VerificationActivity;
+
+public class VerificationViewModel extends ViewModelBase {
+
+    private static final String TAG = VerificationViewModel.class.getSimpleName();
 
     private final MutableLiveData<String> onTimerUpdate = new MutableLiveData<>();
     private final MutableLiveData<Void> onTimerFinish = new MutableLiveData<>();
+
     private final MutableLiveData<AuthException> onSignUpConfirmationFailure = new MutableLiveData<>();
     private final MutableLiveData<AuthSignUpResult> onSignUpConfirmationSuccess = new MutableLiveData<>();
+
     private final MutableLiveData<AuthSignUpResult> onResendCodeSuccess = new MutableLiveData<>();
     private final MutableLiveData<AuthException> onResendCodeFailure = new MutableLiveData<>();
-
-    public void signOut() {
-        Amplify.Auth.fetchAuthSession(
-                success -> { if(success.isSignedIn()) Amplify.Auth.signOut(
-                        () -> Log.i("AmplifySignOut", "Sign out success"),
-                        error -> Log.e("AmplifySignOut", error.toString())
-                ); },
-                error -> Log.e("AmplifyFetchAuth", error.toString())
-        );
-    }
 
     public void startCodeTimer(long currentMillis) {
 
@@ -42,7 +38,7 @@ public class VerificationViewModel extends ViewModel {
                 Integer adjustedSeconds = Math.toIntExact(seconds);
                 String adjustedTime;
 
-                if(adjustedSeconds < 10) {
+                if (adjustedSeconds < 10) {
                     adjustedTime = adjustedMinutes.toString() + ":" + "0" + adjustedSeconds.toString();
                 } else {
                     adjustedTime = adjustedMinutes.toString() + ":" + adjustedSeconds.toString();
@@ -65,6 +61,7 @@ public class VerificationViewModel extends ViewModel {
                 VerificationViewModel.this::onResendCodeFailure
         );
     }
+
 
     private void onResendCodeSuccess(AuthSignUpResult authSignUpResult) {
         Log.i("AmplifyCognito", authSignUpResult.toString());
@@ -94,6 +91,7 @@ public class VerificationViewModel extends ViewModel {
         Log.i("AmplifyCognito", authSignUpResult.toString());
         onSignUpConfirmationSuccess.postValue(authSignUpResult);
     }
+
 
     public LiveData<AuthSignUpResult> getOnResendCodeSuccess() {
         return onResendCodeSuccess;

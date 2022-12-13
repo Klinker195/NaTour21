@@ -1,7 +1,6 @@
 package edu.unina.natour21.dto;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.LinkedList;
 
 import edu.unina.natour21.model.Post;
@@ -25,7 +24,6 @@ public class PostDTO implements Serializable {
     private Boolean isReported;
     private Float rate;
     private UserDTO author;
-    // private LinkedList<ReviewDTO> reviews;
 
     public PostDTO() {
         super();
@@ -35,9 +33,10 @@ public class PostDTO implements Serializable {
         super();
         this.id = post.getId();
         this.title = post.getTitle();
-        if(post.getDescription() != null) this.description = post.getDescription();
+        if (post.getDescription() != null) this.description = post.getDescription();
         this.timestamp = post.getTimestamp().toString();
-        if(post.getEditTimestamp() != null) this.editTimestamp = post.getEditTimestamp().toString();
+        if (post.getEditTimestamp() != null)
+            this.editTimestamp = post.getEditTimestamp().toString();
         this.accessibility = post.getAccessibility();
         this.duration = post.getDuration();
         this.difficulty = post.getDifficulty();

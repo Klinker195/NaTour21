@@ -6,8 +6,14 @@ import android.view.inputmethod.InputMethodManager;
 
 public class KeyboardHandler {
 
-    public KeyboardHandler() { super(); }
+    public KeyboardHandler() {
+        super();
+    }
 
+    /**
+     * Utility method to hide SoftKeyboard in Android Activity objects.
+     * @param activity Activity in which the SoftKeyboard will be hidden.
+     */
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.

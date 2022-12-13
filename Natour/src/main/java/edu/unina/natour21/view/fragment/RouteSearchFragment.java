@@ -7,20 +7,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -41,11 +27,22 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.slider.Slider.OnChangeListener;
-
-import javax.validation.constraints.Null;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.adapter.PostCardAdapter;
@@ -58,7 +55,9 @@ import edu.unina.natour21.viewmodel.RouteExplorationViewModel;
 
 public class RouteSearchFragment extends Fragment {
 
-    public final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = RouteSearchFragment.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     private RouteExplorationViewModel viewModel;
 
@@ -106,11 +105,11 @@ public class RouteSearchFragment extends Fragment {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         LatLng areaPoint = data.getParcelableExtra("areaPoint");
                         //viewModel.writeGPXFile(pointArrayList, getFilesDir().getAbsolutePath());
-                        if(areaPoint != null) {
+                        if (areaPoint != null) {
                             Log.i(TAG, areaPoint.latitude + " | " + areaPoint.longitude);
                             areaStartLat = areaPoint.latitude;
                             areaStartLng = areaPoint.longitude;
@@ -147,6 +146,8 @@ public class RouteSearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
+
         // Find Views
         searchEditText = (EditText) getView().findViewById(R.id.fragmentRouteSearchEditText);
         searchImageViewButton = (ImageView) getView().findViewById(R.id.fragmentRouteSearchImageViewButton);
@@ -177,9 +178,9 @@ public class RouteSearchFragment extends Fragment {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent event) {
 
-                if(event.getAction() != KeyEvent.ACTION_DOWN) return false;
+                if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
 
-                if(keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
                     view.clearFocus();
                     searchButtonAction();
                     return true;
@@ -192,6 +193,14 @@ public class RouteSearchFragment extends Fragment {
         searchImageViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Search button");
+                if(usersSelectorButton.getPaint().getShader() != null) {
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Post list");
+                } else if(routesSelectorButton.getPaint().getShader() != null) {
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "User list");
+                }
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
                 searchButtonAction();
             }
         });
@@ -199,18 +208,17 @@ public class RouteSearchFragment extends Fragment {
         usersSelectorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(usersSelectorButton.getPaint().getShader() != null) {
+                if (usersSelectorButton.getPaint().getShader() != null) {
                     designHandler.setTextGradientTextViewLeftButtonInverse(usersSelectorButton);
                     designHandler.setTextGradientTextViewRightButton(routesSelectorButton);
 
-                    // TODO: Change visual
                     Animation fadeOutAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out_500ms);
                     filterByButton.setEnabled(false);
                     filterByButton.setVisibility(View.INVISIBLE);
                     filterByButton.startAnimation(fadeOutAnimation);
 
                     searchedText = searchEditText.getText().toString();
-                    if(searchedText.replace(" ", "").isEmpty()) searchedText = " ";
+                    if (searchedText.replace(" ", "").isEmpty()) searchedText = " ";
 
                     filterActive = false;
                     areaStartLat = -100d;
@@ -220,7 +228,6 @@ public class RouteSearchFragment extends Fragment {
                     accessibilityFilterValue = false;
                     currentRecyclerViewPage = 0;
 
-                    // TODO: Reset the post array in ViewModel and reset adapter to users
                     viewModel.setPosts(new Post[0]);
                     viewModel.setUsers(new User[0]);
 
@@ -243,7 +250,7 @@ public class RouteSearchFragment extends Fragment {
 
                             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-                            if(!recyclerView.canScrollVertically(1) && layoutManager.getChildCount() != 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            if (!recyclerView.canScrollVertically(1) && layoutManager.getChildCount() != 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
                                 showLoadingDialog();
 
                                 viewModel.getUsersWithPaging(
@@ -265,18 +272,17 @@ public class RouteSearchFragment extends Fragment {
         routesSelectorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(routesSelectorButton.getPaint().getShader() != null) {
+                if (routesSelectorButton.getPaint().getShader() != null) {
                     designHandler.setTextGradientTextViewRightButtonInverse(routesSelectorButton);
                     designHandler.setTextGradientTextViewLeftButton(usersSelectorButton);
 
-                    // TODO: Change visual
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_500ms);
                     filterByButton.setEnabled(true);
                     filterByButton.setVisibility(View.VISIBLE);
                     filterByButton.startAnimation(fadeInAnimation);
 
                     searchedText = searchEditText.getText().toString();
-                    if(searchedText.replace(" ", "").isEmpty()) searchedText = " ";
+                    if (searchedText.replace(" ", "").isEmpty()) searchedText = " ";
 
                     filterActive = false;
                     areaStartLat = -100d;
@@ -286,7 +292,6 @@ public class RouteSearchFragment extends Fragment {
                     accessibilityFilterValue = false;
                     currentRecyclerViewPage = 0;
 
-                    // TODO: Reset the user array in ViewModel (make sure to add it before) and reset adapter to routes
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
                     viewModel.setUsers(new User[0]);
@@ -311,7 +316,7 @@ public class RouteSearchFragment extends Fragment {
 
                             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-                            if(!recyclerView.canScrollVertically(1) && layoutManager.getChildCount() != 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            if (!recyclerView.canScrollVertically(1) && layoutManager.getChildCount() != 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
                                 showLoadingDialog();
 
                                 viewModel.getPostsWithPaging(
@@ -322,7 +327,7 @@ public class RouteSearchFragment extends Fragment {
                                         areaStartLng == null || areaStartLng == -200d ? -200d : areaStartLng,
                                         difficultyFilterValue == null || difficultyFilterValue == -1 ? -1 : difficultyFilterValue + 1, // difficultyFilterValue == -1 ? null : difficultyFilterValue,
                                         durationFilterValue == null || durationFilterValue == 0 ? 0 : durationFilterValue.intValue(),
-                                        accessibilityFilterValue == null || accessibilityFilterValue == false ? false : accessibilityFilterValue
+                                        accessibilityFilterValue != null && accessibilityFilterValue != false && accessibilityFilterValue
                                 );
 
                                 Log.i(TAG, currentRecyclerViewPage.toString());
@@ -348,16 +353,6 @@ public class RouteSearchFragment extends Fragment {
         viewModel.setPosts(new Post[0]);
         viewModel.setUsers(new User[0]);
 
-        /*
-        recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
-
-        viewModel.getPostsWithPaging(currentRecyclerViewPage, recyclerViewPageSize, searchedText, -100d, -200d, -1, 0, false);
-
-        currentRecyclerViewPage += 1;
-
-        showLoadingDialog();
-         */
-
         // Set Scroll Listeners
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -366,7 +361,7 @@ public class RouteSearchFragment extends Fragment {
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-                if(!recyclerView.canScrollVertically(1) && layoutManager.getChildCount() != 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (!recyclerView.canScrollVertically(1) && layoutManager.getChildCount() != 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     showLoadingDialog();
 
                     viewModel.getPostsWithPaging(
@@ -377,8 +372,8 @@ public class RouteSearchFragment extends Fragment {
                             areaStartLng == null || areaStartLng == -200d ? -200d : areaStartLng,
                             difficultyFilterValue == null || difficultyFilterValue == -1 ? -1 : difficultyFilterValue + 1, // difficultyFilterValue == -1 ? null : difficultyFilterValue,
                             durationFilterValue == null || durationFilterValue == 0 ? 0 : durationFilterValue.intValue(),
-                            accessibilityFilterValue == null || accessibilityFilterValue == false ? false : accessibilityFilterValue
-                            );
+                            accessibilityFilterValue != null && accessibilityFilterValue != false && accessibilityFilterValue
+                    );
 
                     Log.i(TAG, currentRecyclerViewPage.toString());
 
@@ -412,10 +407,10 @@ public class RouteSearchFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // TODO: If post is reported it should be shown here
+
         Log.i(TAG, "RESUME!");
         currentRecyclerViewPage = 0;
-        if(routesSelectorButton.getPaint().getShader() == null) {
+        if (routesSelectorButton.getPaint().getShader() == null) {
             viewModel.setPosts(new Post[0]);
 
             recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
@@ -424,22 +419,7 @@ public class RouteSearchFragment extends Fragment {
             viewModel.getPostsWithPaging(currentRecyclerViewPage, recyclerViewPageSize, searchedText, -100d, -200d, -1, 0, false);
 
             currentRecyclerViewPage += 1;
-
-            // showLoadingDialog();
-            /*
-            if(viewModel.getPosts().length != 0) {
-                if(recyclerView.getAdapter() != null) {
-                    if(recyclerView.getAdapter() instanceof UserCardAdapter) {
-                        recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
-                    }
-                    ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(viewModel.getPosts());
-                } else {
-                    recyclerView.setAdapter(new PostCardAdapter(viewModel.getPosts()));
-                }
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
-            */
-        } else if(usersSelectorButton.getPaint().getShader() == null) {
+        } else if (usersSelectorButton.getPaint().getShader() == null) {
             viewModel.setUsers(new User[0]);
 
             recyclerView.setAdapter(new UserCardAdapter(new User[0]));
@@ -449,58 +429,26 @@ public class RouteSearchFragment extends Fragment {
 
             currentRecyclerViewPage += 1;
 
-            // showLoadingDialog();
-
             recyclerView.getAdapter().notifyDataSetChanged();
-            /*
-            if(viewModel.getUsers().length != 0) {
-                if(recyclerView.getAdapter() != null) {
-                    if(recyclerView.getAdapter() instanceof PostCardAdapter) {
-                        recyclerView.setAdapter(new UserCardAdapter(new User[0]));
-                    }
-                    ((UserCardAdapter) recyclerView.getAdapter()).setLocalDataSet(viewModel.getUsers());
-                } else {
-                    recyclerView.setAdapter(new UserCardAdapter(viewModel.getUsers()));
-                }
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
-            */
         }
     }
-
-    /*
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
-        recyclerView.getAdapter().notifyDataSetChanged();
-
-        viewModel.getPostsWithPaging(currentRecyclerViewPage, recyclerViewPageSize, searchedText, -100d, -200d, -1, 0, false);
-
-        currentRecyclerViewPage += 1;
-
-        showLoadingDialog();
-    }
-
-     */
 
     private void observeViewModel() {
         viewModel.getOnPostFetchSuccess().observe(this.getActivity(), new Observer<Post[]>() {
             @Override
             public void onChanged(Post[] posts) {
-                if(posts.length == 0) {
+                if (posts.length == 0) {
                     nothingToSeeImageView.setVisibility(View.VISIBLE);
                 } else {
                     nothingToSeeImageView.setVisibility(View.GONE);
                 }
-                if(recyclerView.getAdapter() != null) {
-                    if(recyclerView.getAdapter() instanceof UserCardAdapter) {
+                if (recyclerView.getAdapter() != null) {
+                    if (recyclerView.getAdapter() instanceof UserCardAdapter) {
                         recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
                     }
                     ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(posts);
                     recyclerView.getAdapter().notifyDataSetChanged();
-                    if(posts.length == recyclerView.getChildCount()) currentRecyclerViewPage -= 1;
+                    if (posts.length == recyclerView.getChildCount()) currentRecyclerViewPage -= 1;
                 } else {
                     recyclerView.setAdapter(new PostCardAdapter(posts));
                 }
@@ -513,7 +461,7 @@ public class RouteSearchFragment extends Fragment {
         viewModel.getOnPostFetchFailure().observe(this.getActivity(), new Observer<Post[]>() {
             @Override
             public void onChanged(Post[] posts) {
-                if(posts.length == 0) {
+                if (posts.length == 0) {
                     nothingToSeeImageView.setVisibility(View.VISIBLE);
                 } else {
                     nothingToSeeImageView.setVisibility(View.GONE);
@@ -527,18 +475,18 @@ public class RouteSearchFragment extends Fragment {
         viewModel.getOnUserFetchSuccess().observe(this.getActivity(), new Observer<User[]>() {
             @Override
             public void onChanged(User[] users) {
-                if(users.length == 0) {
+                if (users.length == 0) {
                     nothingToSeeImageView.setVisibility(View.VISIBLE);
                 } else {
                     nothingToSeeImageView.setVisibility(View.GONE);
                 }
-                if(recyclerView.getAdapter() != null) {
-                    if(recyclerView.getAdapter() instanceof PostCardAdapter) {
+                if (recyclerView.getAdapter() != null) {
+                    if (recyclerView.getAdapter() instanceof PostCardAdapter) {
                         recyclerView.setAdapter(new UserCardAdapter(new User[0]));
                     }
                     ((UserCardAdapter) recyclerView.getAdapter()).setLocalDataSet(users);
                     recyclerView.getAdapter().notifyDataSetChanged();
-                    if(users.length == recyclerView.getChildCount()) currentRecyclerViewPage -= 1;
+                    if (users.length == recyclerView.getChildCount()) currentRecyclerViewPage -= 1;
                 } else {
                     recyclerView.setAdapter(new UserCardAdapter(users));
                 }
@@ -551,7 +499,7 @@ public class RouteSearchFragment extends Fragment {
         viewModel.getOnUserFetchFailure().observe(this.getActivity(), new Observer<User[]>() {
             @Override
             public void onChanged(User[] users) {
-                if(users.length == 0) {
+                if (users.length == 0) {
                     nothingToSeeImageView.setVisibility(View.VISIBLE);
                 } else {
                     nothingToSeeImageView.setVisibility(View.GONE);
@@ -572,23 +520,23 @@ public class RouteSearchFragment extends Fragment {
     private void searchButtonAction() {
 
         searchedText = searchEditText.getText().toString();
-        if(searchedText.replace(" ", "").isEmpty()) searchedText = " ";
+        if (searchedText.replace(" ", "").isEmpty()) searchedText = " ";
 
-        if(routesSelectorButton.getPaint().getShader() == null) {
-            if(popupRouteFilterDurationSlider != null) {
+        if (routesSelectorButton.getPaint().getShader() == null) {
+            if (popupRouteFilterDurationSlider != null) {
                 durationFilterValue = popupRouteFilterDurationSlider.getValue();
             }
-            if(popupRouteFilteringAccessibilityCheckBox != null) {
+            if (popupRouteFilteringAccessibilityCheckBox != null) {
                 accessibilityFilterValue = popupRouteFilteringAccessibilityCheckBox.isChecked();
             }
 
-            if(filterActive == true) {
+            if (filterActive == true) {
                 showLoadingDialog();
                 currentRecyclerViewPage = 0;
 
                 // Clear recycler view
-                if(recyclerView.getAdapter() != null) {
-                    if(recyclerView.getAdapter() instanceof UserCardAdapter) {
+                if (recyclerView.getAdapter() != null) {
+                    if (recyclerView.getAdapter() instanceof UserCardAdapter) {
                         recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
                     }
                     ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(new Post[0]);
@@ -606,12 +554,11 @@ public class RouteSearchFragment extends Fragment {
                         areaStartLng == null || areaStartLng == -200d ? -200d : areaStartLng,
                         difficultyFilterValue == null || difficultyFilterValue == -1 ? -1 : difficultyFilterValue + 1, // difficultyFilterValue == -1 ? null : difficultyFilterValue,
                         durationFilterValue == null || durationFilterValue == 0 ? 0 : durationFilterValue.intValue(),
-                        accessibilityFilterValue == null || accessibilityFilterValue == false ? false : accessibilityFilterValue
+                        accessibilityFilterValue != null && accessibilityFilterValue != false && accessibilityFilterValue
                 );
 
                 currentRecyclerViewPage += 1;
             } else {
-                // TODO: ViewModel for basic search
                 showLoadingDialog();
                 currentRecyclerViewPage = 0;
 
@@ -622,8 +569,8 @@ public class RouteSearchFragment extends Fragment {
                 accessibilityFilterValue = false;
 
                 // Clear recycler view
-                if(recyclerView.getAdapter() != null) {
-                    if(recyclerView.getAdapter() instanceof UserCardAdapter) {
+                if (recyclerView.getAdapter() != null) {
+                    if (recyclerView.getAdapter() instanceof UserCardAdapter) {
                         recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
                     }
                     ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(new Post[0]);
@@ -637,7 +584,7 @@ public class RouteSearchFragment extends Fragment {
 
                 currentRecyclerViewPage += 1;
             }
-        } else if(usersSelectorButton.getPaint().getShader() == null) {
+        } else if (usersSelectorButton.getPaint().getShader() == null) {
             showLoadingDialog();
             currentRecyclerViewPage = 0;
 
@@ -647,8 +594,8 @@ public class RouteSearchFragment extends Fragment {
             durationFilterValue = 0f;
             accessibilityFilterValue = false;
 
-            if(recyclerView.getAdapter() != null) {
-                if(recyclerView.getAdapter() instanceof PostCardAdapter) {
+            if (recyclerView.getAdapter() != null) {
+                if (recyclerView.getAdapter() instanceof PostCardAdapter) {
                     recyclerView.setAdapter(new UserCardAdapter(new User[0]));
                 }
                 ((UserCardAdapter) recyclerView.getAdapter()).setLocalDataSet(new User[0]);
@@ -700,16 +647,16 @@ public class RouteSearchFragment extends Fragment {
         popupRouteFilterDurationSlider.setValue(durationFilterValue);
         popupRouteFilteringAccessibilityCheckBox.setChecked(accessibilityFilterValue);
 
-        if(durationFilterValue != null && durationFilterValue != 0f) {
+        if (durationFilterValue != null && durationFilterValue != 0f) {
             popupRouteFilteringDurationSliderValueTextView.setText(durationFilterValue.intValue() + "'");
         }
 
-        if(areaStartLat != null && areaStartLat != -100d && areaStartLng != null && areaStartLng != -200d) {
+        if (areaStartLat != null && areaStartLat != -100d && areaStartLng != null && areaStartLng != -200d) {
             popupRouteFilteringGeographicAreaButton.setText("Area selected, tap to change");
             popupRouteFilteringGeographicAreaButton.setTextColor(getContext().getColor(R.color.edit_text_color));
         }
 
-        for(int i = 0; i < popupRouteFilteringDifficultyLinearLayout.getChildCount(); i++) {
+        for (int i = 0; i < popupRouteFilteringDifficultyLinearLayout.getChildCount(); i++) {
             int finalI = i;
             popupRouteFilteringDifficultyLinearLayout.getChildAt(i).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -733,7 +680,7 @@ public class RouteSearchFragment extends Fragment {
         popupRouteFilterDurationSlider.addOnChangeListener(new OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                if(value != 0f) {
+                if (value != 0f) {
                     String stringValue = String.valueOf((int) value);
                     popupRouteFilteringDurationSliderValueTextView.setText(stringValue + '\'');
                 } else {
@@ -772,13 +719,13 @@ public class RouteSearchFragment extends Fragment {
                 durationFilterValue = popupRouteFilterDurationSlider.getValue();
                 accessibilityFilterValue = popupRouteFilteringAccessibilityCheckBox.isChecked();
 
-                if(filterActive == true) {
+                if (filterActive == true) {
                     showLoadingDialog();
                     currentRecyclerViewPage = 0;
 
                     // Clear recycler view
-                    if(recyclerView.getAdapter() != null) {
-                        if(recyclerView.getAdapter() instanceof UserCardAdapter) {
+                    if (recyclerView.getAdapter() != null) {
+                        if (recyclerView.getAdapter() instanceof UserCardAdapter) {
                             recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
                         }
                         ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(new Post[0]);
@@ -786,6 +733,7 @@ public class RouteSearchFragment extends Fragment {
                     } else {
                         recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
                     }
+
                     viewModel.setPosts(new Post[0]);
 
                     viewModel.getPostsWithPaging(
@@ -796,7 +744,7 @@ public class RouteSearchFragment extends Fragment {
                             areaStartLng == null || areaStartLng == -200d ? -200d : areaStartLng,
                             difficultyFilterValue == null || difficultyFilterValue == -1 ? -1 : difficultyFilterValue + 1, // difficultyFilterValue == -1 ? null : difficultyFilterValue,
                             durationFilterValue == null ? 0 : durationFilterValue.intValue(),
-                            accessibilityFilterValue == null ? false : accessibilityFilterValue
+                            accessibilityFilterValue != null && accessibilityFilterValue
                     );
 
                     currentRecyclerViewPage += 1;
@@ -827,7 +775,7 @@ public class RouteSearchFragment extends Fragment {
                 currentRecyclerViewPage = 0;
 
                 // Clear recycler view
-                if(recyclerView.getAdapter() != null) {
+                if (recyclerView.getAdapter() != null) {
                     ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(new Post[0]);
                     recyclerView.getAdapter().notifyDataSetChanged();
                 } else {
@@ -843,7 +791,7 @@ public class RouteSearchFragment extends Fragment {
                         areaStartLng == null || areaStartLng == -200d ? -200d : areaStartLng,
                         difficultyFilterValue == null || difficultyFilterValue == -1 ? -1 : difficultyFilterValue + 1, // difficultyFilterValue == -1 ? null : difficultyFilterValue,
                         durationFilterValue == null ? 0 : durationFilterValue.intValue(),
-                        accessibilityFilterValue == null ? false : accessibilityFilterValue
+                        accessibilityFilterValue != null && accessibilityFilterValue
                 );
 
                 currentRecyclerViewPage += 1;
@@ -864,9 +812,9 @@ public class RouteSearchFragment extends Fragment {
         Drawable enabledDifficultyDot = getResources().getDrawable(R.drawable.natour_difficulty_filter_circle);
         Drawable disabledDifficultyDot = getResources().getDrawable(R.drawable.natour_difficulty_filter_circle_disabled);
 
-        for(int i = 0; i < popupRouteFilteringDifficultyLinearLayout.getChildCount(); i++) {
+        for (int i = 0; i < popupRouteFilteringDifficultyLinearLayout.getChildCount(); i++) {
             ImageView difficultyDot = (ImageView) popupRouteFilteringDifficultyLinearLayout.getChildAt(i);
-            if(i <= index) {
+            if (i <= index) {
                 difficultyDot.setImageDrawable(enabledDifficultyDot);
             } else {
                 difficultyDot.setImageDrawable(disabledDifficultyDot);
@@ -884,7 +832,7 @@ public class RouteSearchFragment extends Fragment {
     }
 
     private void showLoadingDialog() {
-        if(loadingDialog == null) {
+        if (loadingDialog == null) {
             loadingDialog = new Dialog(this.getContext());
         }
         loadingDialog.setCancelable(false);
@@ -896,8 +844,8 @@ public class RouteSearchFragment extends Fragment {
     }
 
     private void dismissLoadingDialog() {
-        if(loadingDialog != null) {
-            if(loadingDialog.isShowing()) {
+        if (loadingDialog != null) {
+            if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
         }

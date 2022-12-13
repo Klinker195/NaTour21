@@ -1,13 +1,5 @@
 package edu.unina.natour21.view.activity;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -17,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -27,14 +18,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.amplifyframework.auth.AuthException;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.slider.Slider;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
-import javax.activation.MimeType;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
@@ -43,7 +41,9 @@ import io.jenetics.jpx.GPX;
 
 public class PostCreationActivity extends AppCompatActivity {
 
-    public final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = PostCreationActivity.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     private PostCreationViewModel viewModel;
 
@@ -77,14 +77,14 @@ public class PostCreationActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         pointArrayList = data.getParcelableArrayListExtra("pointArrayList");
                         //viewModel.writeGPXFile(pointArrayList, getFilesDir().getAbsolutePath());
-                        if(pointArrayList != null && !pointArrayList.isEmpty()) {
+                        if (pointArrayList != null && !pointArrayList.isEmpty()) {
                             startLat = pointArrayList.get(0).latitude;
                             startLng = pointArrayList.get(0).longitude;
-                            tmpGPX = viewModel.generateGPXFromPointArrayList(pointArrayList);
+                            tmpGPX = viewModel.generateGPXFromPointArrayList(pointArrayList, null);
                             routePathTextViewButton.setTextSize(16f);
                             routePathTextViewButton.setTextColor(getColor(R.color.edit_text_color));
                             routePathTextViewButton.setText("Route selected, tap to change");
@@ -102,7 +102,7 @@ public class PostCreationActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         Uri uri = data.getData();
                         try {
@@ -129,7 +129,7 @@ public class PostCreationActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         Uri uri = data.getData();
                         picturesPreviewImageView.setImageURI(null);
@@ -138,7 +138,6 @@ public class PostCreationActivity extends AppCompatActivity {
                         picturesPreviewImageView.setVisibility(View.VISIBLE);
                         picturesPreviewBackgroundImageView.setVisibility(View.VISIBLE);
                         picturesClearButton.setVisibility(View.VISIBLE);
-                        // TODO: Do something with image
                     }
                 }
             }
@@ -147,6 +146,8 @@ public class PostCreationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // Set ViewModel
         viewModel = new ViewModelProvider(this).get(PostCreationViewModel.class);
@@ -278,16 +279,16 @@ public class PostCreationActivity extends AppCompatActivity {
                 String routeDescription = descriptionEditText.getText().toString();
                 GPX routeGPX = tmpGPX;
                 Bitmap routeBitmap = null;
-                if(picturesPreviewImageView.getDrawable() != null) {
+                if (picturesPreviewImageView.getDrawable() != null) {
                     routeBitmap = ((BitmapDrawable) picturesPreviewImageView.getDrawable()).getBitmap();
                 }
                 Integer routeDifficulty = selectedDifficultyDotIndex + 1;
                 Integer routeDuration = routeDurationIndex;
                 Boolean routeAccessibility = accessibilityCheckBox.isChecked();
 
-                if(routeName != null && !routeName.isEmpty()) {
-                    if(routeDescription == null) routeDescription = "";
-                    if(routeGPX != null) {
+                if (routeName != null && !routeName.isEmpty()) {
+                    if (routeDescription == null) routeDescription = "";
+                    if (routeGPX != null) {
                         try {
                             viewModel.createPost(
                                     routeName,
@@ -301,7 +302,7 @@ public class PostCreationActivity extends AppCompatActivity {
                                     routeDuration,
                                     routeAccessibility);
                             showLoadingDialog();
-                        } catch(NullPointerException e) {
+                        } catch (NullPointerException e) {
                             dismissLoadingDialog();
                             e.printStackTrace();
                             Toast.makeText(PostCreationActivity.this, "Critical error",
@@ -327,7 +328,7 @@ public class PostCreationActivity extends AppCompatActivity {
             }
         });
 
-        for(int i = 0; i < difficultyLinearLayout.getChildCount(); i++) {
+        for (int i = 0; i < difficultyLinearLayout.getChildCount(); i++) {
             int finalI = i;
             difficultyLinearLayout.getChildAt(i).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -344,9 +345,9 @@ public class PostCreationActivity extends AppCompatActivity {
         Drawable enabledDifficultyDot = getResources().getDrawable(R.drawable.natour_difficulty_filter_circle);
         Drawable disabledDifficultyDot = getResources().getDrawable(R.drawable.natour_difficulty_filter_circle_disabled);
 
-        for(int i = 0; i < difficultyLinearLayout.getChildCount(); i++) {
+        for (int i = 0; i < difficultyLinearLayout.getChildCount(); i++) {
             ImageView difficultyDot = (ImageView) difficultyLinearLayout.getChildAt(i);
-            if(i <= index) {
+            if (i <= index) {
                 difficultyDot.setImageDrawable(enabledDifficultyDot);
             } else {
                 difficultyDot.setImageDrawable(disabledDifficultyDot);
@@ -355,7 +356,7 @@ public class PostCreationActivity extends AppCompatActivity {
     }
 
     private void showLoadingDialog() {
-        if(loadingDialog == null) {
+        if (loadingDialog == null) {
             loadingDialog = new Dialog(this);
         }
         loadingDialog.setCancelable(false);
@@ -367,8 +368,8 @@ public class PostCreationActivity extends AppCompatActivity {
     }
 
     private void dismissLoadingDialog() {
-        if(loadingDialog != null) {
-            if(loadingDialog.isShowing()) {
+        if (loadingDialog != null) {
+            if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
         }

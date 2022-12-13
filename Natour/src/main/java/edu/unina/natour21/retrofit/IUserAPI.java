@@ -16,7 +16,7 @@ public interface IUserAPI {
             @Path("page") Integer page,
             @Path("pageSize") Integer pageSize,
             @Path("genericName") String genericName
-            );
+    );
 
     @GET("/user/{email}")
     Call<UserDTO> getUserByEmail(@Path("email") String email);

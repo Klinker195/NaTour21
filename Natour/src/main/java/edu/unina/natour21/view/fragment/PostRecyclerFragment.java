@@ -1,40 +1,38 @@
 package edu.unina.natour21.view.fragment;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import java.util.LinkedList;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.adapter.PostCardAdapter;
-import edu.unina.natour21.adapter.UserCardAdapter;
-import edu.unina.natour21.model.FavCollection;
 import edu.unina.natour21.model.Post;
 import edu.unina.natour21.model.User;
+import edu.unina.natour21.view.activity.PostFilteringMapsActivity;
 import edu.unina.natour21.viewmodel.RouteExplorationViewModel;
-import io.jenetics.jpx.Link;
 
 public class PostRecyclerFragment extends Fragment {
 
-    public final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = PostRecyclerFragment.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
+
+    private RouteExplorationViewModel viewModel;
 
     /*
         MODE:
@@ -42,11 +40,8 @@ public class PostRecyclerFragment extends Fragment {
     */
     private static final String ARG_NAME_1 = "MODE";
     private static final String ARG_NAME_2 = "collectionId";
-
     private Integer mode;
     private Long collectionId;
-
-    private RouteExplorationViewModel viewModel;
 
     private RecyclerView recyclerView;
     private ImageView nothingToSeeImageView;
@@ -60,7 +55,6 @@ public class PostRecyclerFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static PostRecyclerFragment newInstance(Integer MODE) {
         PostRecyclerFragment fragment = new PostRecyclerFragment();
         Bundle args = new Bundle();
@@ -79,7 +73,9 @@ public class PostRecyclerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(getArguments() != null) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
+
+        if (getArguments() != null) {
             mode = getArguments().getInt(ARG_NAME_1);
             collectionId = getArguments().getLong(ARG_NAME_2);
         }
@@ -104,10 +100,10 @@ public class PostRecyclerFragment extends Fragment {
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-                if(!recyclerView.canScrollVertically(1) && layoutManager.getChildCount() != 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (!recyclerView.canScrollVertically(1) && layoutManager.getChildCount() != 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     showLoadingDialog();
 
-                    if(mode == 0) {
+                    if (mode == 0) {
                         viewModel.getPostsWithPaging(
                                 currentRecyclerViewPage,
                                 recyclerViewPageSize,
@@ -118,28 +114,13 @@ public class PostRecyclerFragment extends Fragment {
                                 0,
                                 false
                         );
-                    } else if(mode == 1) {
-                        // TODO: Make query instead of using cached objects
-                        if(viewModel.getUserFavCollections() != null && !viewModel.getUserFavCollections().isEmpty()) {
-                            for(FavCollection favCollection : viewModel.getUserFavCollections()) {
-                                if(favCollection.getId() == collectionId) {
-                                    if(favCollection.getPosts() != null && !favCollection.getPosts().isEmpty()) {
-                                        Integer sublistIndex = currentRecyclerViewPage * recyclerViewPageSize;
-                                        if(sublistIndex > favCollection.getPosts().size()) sublistIndex = favCollection.getPosts().size();
-                                        LinkedList<Post> favCollectionLinkedList = new LinkedList<Post>(favCollection.getPosts().subList(0, sublistIndex));
-                                        if(recyclerView.getAdapter() != null) {
-                                            ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(favCollection.getPosts().toArray(new Post[favCollection.getPosts().size()]));
-                                        } else {
-                                            recyclerView.setAdapter(new PostCardAdapter(favCollection.getPosts().toArray(new Post[favCollection.getPosts().size()])));
-                                        }
-                                        recyclerView.getAdapter().notifyDataSetChanged();
-                                    } else {
-                                        currentRecyclerViewPage = 0;
-                                    }
-                                }
-                            }
-                        }
-                        dismissLoadingDialog();
+                    } else if (mode == 1) {
+
+                        viewModel.getPostsByCollectionIdWithPaging(
+                                currentRecyclerViewPage,
+                                recyclerViewPageSize,
+                                collectionId
+                        );
                     }
 
                     Log.i(TAG, currentRecyclerViewPage.toString());
@@ -159,11 +140,13 @@ public class PostRecyclerFragment extends Fragment {
         Log.i(TAG, "RESUME!");
         currentRecyclerViewPage = 0;
 
+        recyclerView.setAdapter(new PostCardAdapter(new Post[0]));
+
         viewModel.setPosts(new Post[0]);
 
         showLoadingDialog();
 
-        if(mode == 0) {
+        if (mode == 0) {
             viewModel.getPostsWithPaging(
                     currentRecyclerViewPage,
                     recyclerViewPageSize,
@@ -174,33 +157,12 @@ public class PostRecyclerFragment extends Fragment {
                     0,
                     false
             );
-        } else if(mode == 1) {
-            // TODO: Make query instead of using cached objects
-            if(viewModel.getUserFavCollections() != null && !viewModel.getUserFavCollections().isEmpty()) {
-                for(FavCollection favCollection : viewModel.getUserFavCollections()) {
-                    if(favCollection.getId() == collectionId) {
-                        if(favCollection.getPosts() != null && !favCollection.getPosts().isEmpty()) {
-                            Integer sublistIndex = currentRecyclerViewPage * recyclerViewPageSize;
-                            if(sublistIndex > favCollection.getPosts().size()) sublistIndex = favCollection.getPosts().size();
-                            LinkedList<Post> favCollectionLinkedList = new LinkedList<Post>(favCollection.getPosts().subList(0, sublistIndex));
-                            if(recyclerView.getAdapter() != null) {
-                                ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(favCollection.getPosts().toArray(new Post[favCollection.getPosts().size()]));
-                            } else {
-                                recyclerView.setAdapter(new PostCardAdapter(favCollection.getPosts().toArray(new Post[favCollection.getPosts().size()])));
-                            }
-                            recyclerView.getAdapter().notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(this.getContext(), "The collection is empty", Toast.LENGTH_SHORT).show();
-                            Navigation.findNavController(getParentFragmentManager().getPrimaryNavigationFragment().getView()).navigate(R.id.action_global_profile);
-                            currentRecyclerViewPage = 0;
-                        }
-                    }
-                }
-            } else {
-                Toast.makeText(this.getContext(), "The collection is empty", Toast.LENGTH_SHORT).show();
-                Navigation.findNavController(getParentFragmentManager().getPrimaryNavigationFragment().getView()).navigate(R.id.action_global_profile);
-            }
-            dismissLoadingDialog();
+        } else if (mode == 1) {
+            viewModel.getPostsByCollectionIdWithPaging(
+                    currentRecyclerViewPage,
+                    recyclerViewPageSize,
+                    collectionId
+            );
         }
 
         currentRecyclerViewPage += 1;
@@ -210,12 +172,12 @@ public class PostRecyclerFragment extends Fragment {
         viewModel.getOnPostFetchSuccess().observe(this.getActivity(), new Observer<Post[]>() {
             @Override
             public void onChanged(Post[] posts) {
-                if(posts.length == 0) {
+                if (posts.length == 0) {
                     nothingToSeeImageView.setVisibility(View.VISIBLE);
                 } else {
                     nothingToSeeImageView.setVisibility(View.GONE);
                 }
-                if(recyclerView.getAdapter() != null) {
+                if (recyclerView.getAdapter() != null) {
                     ((PostCardAdapter) recyclerView.getAdapter()).setLocalDataSet(posts);
                 } else {
                     recyclerView.setAdapter(new PostCardAdapter(posts));
@@ -228,7 +190,7 @@ public class PostRecyclerFragment extends Fragment {
         viewModel.getOnPostFetchFailure().observe(this.getActivity(), new Observer<Post[]>() {
             @Override
             public void onChanged(Post[] posts) {
-                if(posts.length == 0) {
+                if (posts.length == 0) {
                     nothingToSeeImageView.setVisibility(View.VISIBLE);
                 } else {
                     nothingToSeeImageView.setVisibility(View.GONE);
@@ -245,7 +207,7 @@ public class PostRecyclerFragment extends Fragment {
     }
 
     private void showLoadingDialog() {
-        if(loadingDialog == null) {
+        if (loadingDialog == null) {
             loadingDialog = new Dialog(this.getContext());
         }
         loadingDialog.setCancelable(false);
@@ -257,8 +219,8 @@ public class PostRecyclerFragment extends Fragment {
     }
 
     private void dismissLoadingDialog() {
-        if(loadingDialog != null) {
-            if(loadingDialog.isShowing()) {
+        if (loadingDialog != null) {
+            if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
         }

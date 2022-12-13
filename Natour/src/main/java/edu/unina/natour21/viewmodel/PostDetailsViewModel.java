@@ -14,6 +14,7 @@ import com.amplifyframework.auth.AuthUserAttribute;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.core.Consumer;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,6 +38,7 @@ import edu.unina.natour21.retrofit.IFavCollectionAPI;
 import edu.unina.natour21.retrofit.IPostAPI;
 import edu.unina.natour21.retrofit.IReportAPI;
 import edu.unina.natour21.retrofit.IUserAPI;
+import edu.unina.natour21.view.activity.PostFilteringMapsActivity;
 import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.Route;
 import io.jenetics.jpx.Track;
@@ -46,12 +48,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PostDetailsViewModel extends ViewModel {
+public class PostDetailsViewModel extends ViewModelBase {
 
-    public final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = PostDetailsViewModel.class.getSimpleName();
 
-    private MutableLiveData<Void> onReportSaveSuccess = new MutableLiveData<Void>();
-    private MutableLiveData<Void> onReportSaveFailure = new MutableLiveData<Void>();
+    private final MutableLiveData<Void> onReportSaveSuccess = new MutableLiveData<Void>();
+    private final MutableLiveData<Void> onReportSaveFailure = new MutableLiveData<Void>();
 
     private final MutableLiveData<Void> onUserQuerySuccess = new MutableLiveData<>();
     private final MutableLiveData<Void> onUserQueryFailure = new MutableLiveData<>();
@@ -80,20 +82,15 @@ public class PostDetailsViewModel extends ViewModel {
     private Post editedPost;
     private User currentUser;
 
-    public GPX generateGPXFromPointArrayList(ArrayList<LatLng> pointArrayList) {
-        GPX newGpx = null;
-        if(pointArrayList != null && !pointArrayList.isEmpty()) {
-            Route.Builder routeBuilder = Route.builder();
-            for(LatLng point : pointArrayList) {
-                routeBuilder.addPoint(waypoint -> waypoint.lat(point.latitude).lon(point.longitude));
-            }
-            Route gpxRoute = routeBuilder.build();
-            newGpx = GPX.builder()
-                    .addRoute(gpxRoute)
-                    .build();
-            Log.d(TAG, newGpx.toString());
-        }
-        return newGpx;
+    private static final double LN2 = 0.6931471805599453;
+    private static final int WORLD_PX_HEIGHT = 256;
+    private static final int WORLD_PX_WIDTH = 256;
+    private static final int ZOOM_MAX = 21;
+
+    public GPX readGPXFile(InputStream fileInputStream) {
+        GPX gpx = super.readGPXFile(fileInputStream);
+        if(gpx == null) onIncorrectFile();
+        return gpx != null ? gpx : null;
     }
 
     public void removePostFromCollection(Long collectionId) {
@@ -103,7 +100,7 @@ public class PostDetailsViewModel extends ViewModel {
         favCollectionCall.enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     onRemovePostFromCollectionSuccess();
                 } else {
                     onRemovePostFromCollectionFailure();
@@ -125,7 +122,7 @@ public class PostDetailsViewModel extends ViewModel {
         favCollectionCall.enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     onAddPostToFavCollectionSuccess();
                 } else {
                     onAddPostToFavCollectionFailure();
@@ -146,10 +143,10 @@ public class PostDetailsViewModel extends ViewModel {
         favCollectionCall.enqueue(new Callback<List<FavCollectionDTO>>() {
             @Override
             public void onResponse(Call<List<FavCollectionDTO>> call, Response<List<FavCollectionDTO>> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     ArrayList<FavCollectionDTO> favCollectionDTOArrayList = new ArrayList<FavCollectionDTO>(response.body());
                     ArrayList<FavCollection> favCollectionArrayList = new ArrayList<FavCollection>();
-                    for(FavCollectionDTO favCollectionDTO : favCollectionDTOArrayList) {
+                    for (FavCollectionDTO favCollectionDTO : favCollectionDTOArrayList) {
                         favCollectionArrayList.add(new FavCollection(favCollectionDTO));
                     }
                     userFavCollections = favCollectionArrayList;
@@ -166,12 +163,9 @@ public class PostDetailsViewModel extends ViewModel {
         });
     }
 
-    // path getFilesDir().getAbsolutePath()
-    public void createReport(String title, String description, Post post/* , PostDTO postDTO, String pathGPX */) {
+    public void createReport(String title, String description, Post post) {
         Log.d(TAG, "\nREPORT TITLE: " + title);
         Log.d(TAG, "ISSUES/INACCURACIES: " + description);
-
-        // pathGPX += "/tmp.gpx";
 
         ReportDTO reportDTO = new ReportDTO();
         reportDTO.setTitle(title);
@@ -189,11 +183,11 @@ public class PostDetailsViewModel extends ViewModel {
         reportCall.enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if(response.body() != null) {
-                    onReportSaveSuccess.postValue(null);
+                if (response.body() != null) {
+                    onReportSaveSuccess();
                     Log.d(TAG, "SUCCESS");
                 } else {
-                    onReportSaveFailure.postValue(null);
+                    onReportSaveFailure();
                 }
             }
 
@@ -201,7 +195,7 @@ public class PostDetailsViewModel extends ViewModel {
             public void onFailure(Call<Boolean> call, Throwable t) {
                 Log.d(TAG, "REPORT NOT CREATED");
                 t.printStackTrace();
-                onReportSaveFailure.postValue(null);
+                onReportSaveFailure();
             }
         });
     }
@@ -240,14 +234,13 @@ public class PostDetailsViewModel extends ViewModel {
         Boolean routeAccessibility = editedPost.getAccessibility();
         User author = editedPost.getAuthor();
 
-        if(gpxPath == null) throw new NullPointerException();
+        if (gpxPath == null) throw new NullPointerException();
 
         gpxPath += "/tmp.gpx";
 
         String routePictureBase64 = null;
 
-        // TODO: Review base 64 image
-        if(routeBitmap != null) {
+        if (routeBitmap != null) {
             ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
             routeBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bitmapOutputStream);
             byte[] byteArray = bitmapOutputStream.toByteArray();
@@ -258,7 +251,7 @@ public class PostDetailsViewModel extends ViewModel {
         Log.d(TAG, "DESCRIPTION: " + routeDescription);
         Log.d(TAG, "COORDS:\n");
         routeGPX.getRoutes().forEach(route -> route.getPoints().forEach(wayPoint -> Log.d(TAG, "    LAT: " + wayPoint.getLatitude() + " | LNG: " + wayPoint.getLongitude())));
-        if(routePictureBase64 != null) {
+        if (routePictureBase64 != null) {
             Log.d(TAG, "DRAWABLE: " + routePictureBase64.substring(0, 100) + " [...]");
         }
         Log.d(TAG, "DIFFICULTY: " + routeDifficulty.toString() + " | DURATION: " + routeDuration.toString() + " | ACCESSIBILITY: " + routeAccessibility.toString());
@@ -269,8 +262,8 @@ public class PostDetailsViewModel extends ViewModel {
         Amplify.Auth.fetchUserAttributes(new Consumer<List<AuthUserAttribute>>() {
             @Override
             public void accept(@NonNull List<AuthUserAttribute> attributes) {
-                for(AuthUserAttribute value : attributes) {
-                    if(value.getKey().getKeyString().equals("email")) {
+                for (AuthUserAttribute value : attributes) {
+                    if (value.getKey().getKeyString().equals("email")) {
                         Log.d(TAG, value.getKey().getKeyString());
                         Log.d(TAG, value.getValue());
                         IUserAPI userAPI = AmazonAPI.getClient().create(IUserAPI.class);
@@ -280,7 +273,7 @@ public class PostDetailsViewModel extends ViewModel {
                             @Override
                             public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
                                 Log.d(TAG, "userCall onResponse");
-                                if(response.body() != null) {
+                                if (response.body() != null) {
                                     PostDTO postDTO = new PostDTO();
 
                                     postDTO.setId(routeId);
@@ -292,7 +285,7 @@ public class PostDetailsViewModel extends ViewModel {
                                         GPX.write(routeGPX, finalGpxPath);
                                     } catch (IOException e) {
                                         e.printStackTrace();
-                                        onPostQueryFailure.postValue(null);
+                                        onPostQueryFailure();
                                         return;
                                     }
 
@@ -301,15 +294,15 @@ public class PostDetailsViewModel extends ViewModel {
                                         byteArray = Files.readAllBytes(Paths.get(finalGpxPath));
                                     } catch (IOException e) {
                                         e.printStackTrace();
-                                        onPostQueryFailure.postValue(null);
+                                        onPostQueryFailure();
                                         return;
                                     }
                                     String routeGpxBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
                                     File gpxFile = new File(finalGpxPath);
 
-                                    if(gpxFile.exists()) {
-                                        if(gpxFile.delete()) {
+                                    if (gpxFile.exists()) {
+                                        if (gpxFile.delete()) {
                                             Log.d(TAG, gpxFile + " DELETED");
                                         } else {
                                             Log.d(TAG, gpxFile + " NOT FOUND");
@@ -321,7 +314,7 @@ public class PostDetailsViewModel extends ViewModel {
                                     postDTO.setStartLat(routeStartLat);
                                     postDTO.setStartLng(routeStartLng);
 
-                                    if(finalRoutePictureBase64 != null) {
+                                    if (finalRoutePictureBase64 != null) {
                                         Log.d(TAG, finalRoutePictureBase64);
                                         LinkedList<String> pics = new LinkedList<String>();
                                         pics.add(finalRoutePictureBase64);
@@ -344,10 +337,12 @@ public class PostDetailsViewModel extends ViewModel {
                                         @Override
                                         public void onResponse(Call<PostDTO> call, Response<PostDTO> response) {
                                             Log.d(TAG, "postCall onResponse");
-                                            if(response.body() != null) {
+                                            if (response.body() != null) {
                                                 onPostQuerySuccess();
                                                 currentPost = editedPost;
                                                 Log.d(TAG, "SUCCESS");
+                                            } else {
+                                                onPostQueryFailure();
                                             }
                                         }
 
@@ -398,16 +393,17 @@ public class PostDetailsViewModel extends ViewModel {
                         userCall.enqueue(new Callback<UserDTO>() {
                             @Override
                             public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                                if(response.body() != null) {
+                                if (response.body() != null) {
                                     currentUser = new User(response.body());
-                                    onUserQuerySuccess.postValue(null);
+                                    onUserQuerySuccess();
                                 } else {
-                                    onUserQueryFailure.postValue(null);
+                                    onUserQuerySuccess();
                                 }
                             }
+
                             @Override
                             public void onFailure(Call<UserDTO> call, Throwable t) {
-                                onUserQueryFailure.postValue(null);
+                                onUserQueryFailure();
                             }
                         });
                     }
@@ -416,7 +412,7 @@ public class PostDetailsViewModel extends ViewModel {
         }, new Consumer<AuthException>() {
             @Override
             public void accept(@NonNull AuthException value) {
-                onFetchUserAttributesFailure.postValue(value);
+                onFetchUserAttributesFailure(value);
             }
         });
     }
@@ -425,46 +421,48 @@ public class PostDetailsViewModel extends ViewModel {
         ArrayList<WayPoint> wayPointArrayList = new ArrayList<WayPoint>(route.getRoutes().get(0).getPoints());
         ArrayList<LatLng> latLngArrayList = new ArrayList<LatLng>();
 
-        for(WayPoint wayPoint : wayPointArrayList) {
+        for (WayPoint wayPoint : wayPointArrayList) {
             latLngArrayList.add(new LatLng(wayPoint.getLatitude().doubleValue(), wayPoint.getLongitude().doubleValue()));
         }
 
         return latLngArrayList;
     }
 
-    public GPX readGPXFile(InputStream fileInputStream) {
-        GPX parsedGPX;
-        try {
-            parsedGPX = GPX.read(fileInputStream);
-            Route newRoute = Route.builder().build();
-            LinkedList<WayPoint> wayPointsLinkedList = new LinkedList<WayPoint>();
-            if(!parsedGPX.getRoutes().isEmpty()) {
-                wayPointsLinkedList = new LinkedList<WayPoint>();
-                LinkedList<Route> routeLinkedList = new LinkedList<Route>(parsedGPX.getRoutes());
-                for (Route route : routeLinkedList) {
-                    wayPointsLinkedList.addAll(new LinkedList<WayPoint>(route.getPoints()));
-                }
-            } else if(!parsedGPX.getWayPoints().isEmpty()) {
-                wayPointsLinkedList = new LinkedList<WayPoint>(parsedGPX.getWayPoints());
-            } else if(!parsedGPX.getTracks().isEmpty()) {
-                LinkedList<TrackSegment> trackSegmentsLinkedList = new LinkedList<TrackSegment>();
-                LinkedList<Track> tracksLinkedList = new LinkedList<Track>(parsedGPX.getTracks());
-                tracksLinkedList.forEach(track -> trackSegmentsLinkedList.addAll(new LinkedList<TrackSegment>(track.getSegments())));
-                for (TrackSegment trackSegment : trackSegmentsLinkedList) {
-                    wayPointsLinkedList.addAll(new LinkedList<WayPoint>(trackSegment.getPoints()));
-                }
-            }
-            for (WayPoint wayPoint : wayPointsLinkedList) {
-                newRoute = newRoute.toBuilder().addPoint(wayPoint).build();
-            }
+    public int getBoundsZoomLevel(LatLngBounds bounds, int mapWidthPx, int mapHeightPx) {
 
-            newRoute.getPoints().forEach(wayPoint -> Log.d(TAG, wayPoint.getLatitude() + " " + wayPoint.getLongitude()));
-            return GPX.builder().addRoute(newRoute).build();
-        } catch (IOException e) {
-            e.printStackTrace();
-            onIncorrectFile.postValue(null);
-            return null;
-        }
+        LatLng ne = bounds.northeast;
+        LatLng sw = bounds.southwest;
+
+        double latFraction = (latRad(ne.latitude) - latRad(sw.latitude)) / Math.PI;
+
+        double lngDiff = ne.longitude - sw.longitude;
+        double lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        double latZoom = zoom(mapHeightPx, WORLD_PX_HEIGHT, latFraction);
+        double lngZoom = zoom(mapWidthPx, WORLD_PX_WIDTH, lngFraction);
+
+        int result = Math.min((int)latZoom, (int)lngZoom);
+        result -= 2;
+        if(result <= 0) result = 1;
+        return Math.min(result, ZOOM_MAX);
+    }
+
+    private double latRad(double lat) {
+        double sin = Math.sin(lat * Math.PI / 180);
+        double radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+        return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+    }
+
+    private double zoom(int mapPx, int worldPx, double fraction) {
+        return Math.floor(Math.log(mapPx / worldPx / fraction) / LN2);
+    }
+
+    private void onReportSaveSuccess() {
+        onReportSaveSuccess.postValue(null);
+    }
+
+    private void onReportSaveFailure() {
+        onReportSaveFailure.postValue(null);
     }
 
     private void onRemovePostFromCollectionSuccess() {
@@ -515,11 +513,20 @@ public class PostDetailsViewModel extends ViewModel {
         onAddPostToFavCollectionFailure.postValue(false);
     }
 
-    public MutableLiveData<Boolean> getOnRemovePostFromCollectionSuccess() {
+    public void onFetchUserAttributesFailure(AuthException authException) {
+        onFetchUserAttributesFailure.postValue(authException);
+    }
+
+    public void onIncorrectFile() {
+        onIncorrectFile.postValue(null);
+    }
+
+
+    public LiveData<Boolean> getOnRemovePostFromCollectionSuccess() {
         return onRemovePostFromCollectionSuccess;
     }
 
-    public MutableLiveData<Boolean> getOnRemovePostFromCollectionFailure() {
+    public LiveData<Boolean> getOnRemovePostFromCollectionFailure() {
         return onRemovePostFromCollectionFailure;
     }
 
@@ -543,13 +550,6 @@ public class PostDetailsViewModel extends ViewModel {
         return onPostQueryFailure;
     }
 
-    public void onFetchUserAttributesFailure(AuthException authException) {
-        onFetchUserAttributesFailure.postValue(authException);
-    }
-
-    public void onIncorrectFile() {
-        onIncorrectFile.postValue(null);
-    }
 
     public LiveData<Void> getOnUserQuerySuccess() {
         return onUserQuerySuccess;
@@ -586,6 +586,7 @@ public class PostDetailsViewModel extends ViewModel {
     public LiveData<Void> getOnCurrentUserFavCollectionFailure() {
         return onCurrentUserFavCollectionFailure;
     }
+
 
     public Post getCurrentPost() {
         return currentPost;

@@ -3,8 +3,6 @@ package edu.unina.natour21.dto;
 import java.io.Serializable;
 import java.util.LinkedList;
 
-import edu.unina.natour21.model.FavCollection;
-
 public class FavCollectionDTO implements Serializable {
 
     private static final long serialVersionUID = 1739407699313667547L;

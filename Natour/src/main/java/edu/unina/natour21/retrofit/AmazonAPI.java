@@ -10,7 +10,8 @@ public class AmazonAPI {
 
     public static Retrofit retrofit = null;
 
-    private AmazonAPI() { }
+    private AmazonAPI() {
+    }
 
     public static Retrofit getClient() {
         String URL = "http://15.161.229.29:8080";

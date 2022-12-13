@@ -1,6 +1,5 @@
 package edu.unina.natour21.utility;
 
-import com.amazonaws.mobileconnectors.cognitoauth.Auth;
 import com.amplifyframework.auth.AuthException;
 
 public class AmplifyExceptionHandler {

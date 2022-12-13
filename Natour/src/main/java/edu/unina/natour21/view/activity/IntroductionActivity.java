@@ -1,26 +1,34 @@
 package edu.unina.natour21.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.app.Application;
 import android.content.Intent;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.amplifyframework.core.Amplify;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import edu.unina.natour21.R;
 import edu.unina.natour21.application.NatourApplication;
+import edu.unina.natour21.utility.KeyboardHandler;
 import edu.unina.natour21.utility.NatourUIDesignHandler;
 import edu.unina.natour21.viewmodel.IntroductionViewModel;
 
 public class IntroductionActivity extends AppCompatActivity {
+
+    private static final String TAG = IntroductionActivity.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     private IntroductionViewModel viewModel;
 
@@ -33,10 +41,18 @@ public class IntroductionActivity extends AppCompatActivity {
     private ConstraintLayout planetLayout;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        KeyboardHandler.hideKeyboard(this);
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(NatourApplication.getCurrentAmplifyUser() != null) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        if(Amplify.Auth.getCurrentUser() != null) {
             Intent switchActivityIntent = new Intent(this, RouteExplorationActivity.class);
             this.startActivity(switchActivityIntent);
             finish();
@@ -80,86 +96,5 @@ public class IntroductionActivity extends AppCompatActivity {
                 startActivity(switchActivityIntent);
             }
         });
-
-        /*
-        Amplify.Auth.fetchAuthSession(
-                result -> Log.i("AmplifyQuickstart", result.toString()),
-                error -> Log.e("AmplifyQuickstart", error.toString())
-        );
-        */
-
-        /*
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-                String url = "http://ec2-15-161-60-195.eu-south-1.compute.amazonaws.com:8080/post/1";
-
-                JsonObjectRequest jsonRequest = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (response != null) {
-                            Gson gson = new Gson();
-                            PostDTO postDTO = gson.fromJson(response.toString(), PostDTO.class);
-
-                            Log.i("POST", response.toString());
-                            Log.i("POST", postDTO.toString());
-
-                            Post post = new Post(postDTO);
-
-                            Log.i("POST", post.toString());
-
-                            if(post.getPics() != null) {
-                                Log.i("IMG", "Image set!");
-                                imageView.setImageBitmap(post.getPics());
-                            }
-
-                            if(post.getGpx() != null) {
-                                Log.i("GPX", "Gpx set!");
-                                String gpx;
-                                List<WayPoint> pointList = post.getGpx().getTracks().get(0).getSegments().get(0).getPoints();
-
-                                StringBuilder sb = new StringBuilder("");
-
-                                for(int i = 0; i < pointList.size(); i++) {
-                                    String tmpString = "Lat: " + pointList.get(i).getLatitude() + " | Lng: " + pointList.get(i).getLongitude() + "\n";
-                                    sb.append(tmpString);
-                                }
-
-                                gpx = sb.toString();
-
-                                textView.setText(gpx);
-                            }
-
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("LOG", error.toString());
-                    }
-                });
-
-                queue.add(jsonRequest);
-            }
-        });
-         */
     }
-
-    /*
-    @Override
-    protected void onPause() {
-        super.onPause();
-        earthAnimation.stop();
-        moonAnimation.stop();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        earthAnimation.start();
-        moonAnimation.start();
-    }
-     */
-
 }

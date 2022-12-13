@@ -12,7 +12,9 @@ public class ReviewDTO implements Serializable {
     private Float rate;
     private String description;
 
-    public ReviewDTO() { super(); }
+    public ReviewDTO() {
+        super();
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

@@ -15,7 +15,6 @@ import edu.unina.natour21.dto.UserDTO;
 public class User implements Parcelable {
 
     private final String email;
-    // private String uuid;
     private String name;
     private String surname;
     private String nickname;
@@ -41,30 +40,26 @@ public class User implements Parcelable {
 
         this.posts = new LinkedList<>();
 
-        if(userDTO.getPosts() != null) {
-            for(PostDTO tmpPostDTO : userDTO.getPosts()) {
+        if (userDTO.getPosts() != null) {
+            for (PostDTO tmpPostDTO : userDTO.getPosts()) {
                 this.posts.add(new Post(tmpPostDTO));
             }
         }
 
         this.followedUsers = new LinkedList<>();
 
-        if(userDTO.getFollowedUsers() != null) {
-            for(UserDTO tmpUserDTO : userDTO.getFollowedUsers()) {
+        if (userDTO.getFollowedUsers() != null) {
+            for (UserDTO tmpUserDTO : userDTO.getFollowedUsers()) {
                 this.followedUsers.add(new User(tmpUserDTO));
             }
         }
 
-        if(userDTO.getPropic() != null) {
+        if (userDTO.getPropic() != null) {
             byte[] decodedBase64 = Base64.decode(userDTO.getPropic(), Base64.DEFAULT);
             this.propic = BitmapFactory.decodeByteArray(decodedBase64, 0, decodedBase64.length);
-        } else {
-            // TODO: Set standard pic or fix in view
         }
 
     }
-
-    // public String getUuid() { return uuid; }
 
     protected User(Parcel in) {
         this.email = in.readString();
@@ -72,11 +67,7 @@ public class User implements Parcelable {
         this.surname = in.readString();
         this.nickname = in.readString();
         // this.propic = (Bitmap) in.readParcelable(Bitmap.class.getClassLoader());
-        if(in.readByte() == 0) {
-            this.isAdmin = false;
-        } else {
-            this.isAdmin = true;
-        }
+        this.isAdmin = in.readByte() != 0;
         this.sex = in.readInt();
         this.height = in.readInt();
         this.weight = in.readFloat();
@@ -129,12 +120,6 @@ public class User implements Parcelable {
     public String getEmail() {
         return email;
     }
-
-    /*
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    */
 
     public Boolean getAdmin() {
         return isAdmin;
@@ -204,7 +189,7 @@ public class User implements Parcelable {
         dest.writeString(surname);
         dest.writeString(nickname);
         // dest.writeParcelable(propic, flags);
-        if(isAdmin == null || isAdmin == false) {
+        if (isAdmin == null || isAdmin == false) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);

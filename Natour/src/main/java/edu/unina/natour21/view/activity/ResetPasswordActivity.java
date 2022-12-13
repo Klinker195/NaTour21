@@ -1,16 +1,17 @@
 package edu.unina.natour21.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.amplifyframework.auth.AuthException;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import edu.unina.natour21.R;
 import edu.unina.natour21.utility.AmplifyExceptionHandler;
@@ -18,6 +19,10 @@ import edu.unina.natour21.utility.NatourUIDesignHandler;
 import edu.unina.natour21.viewmodel.ResetPasswordViewModel;
 
 public class ResetPasswordActivity extends AppCompatActivity {
+
+    private static final String TAG = ResetPasswordActivity.class.getSimpleName();
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     private ResetPasswordViewModel viewModel;
 
@@ -31,6 +36,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // Set ViewModel
         viewModel = new ViewModelProvider(this).get(ResetPasswordViewModel.class);
@@ -64,8 +71,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 String password = editTextResetPassword.getText().toString();
                 String passwordConfirmation = editTextVerifyPassword.getText().toString();
 
-                if(viewModel.checkFieldsValidity(verificationCode, password, passwordConfirmation)) {
-                    if(viewModel.checkPasswordMatch(password, passwordConfirmation)) {
+                if (viewModel.checkFieldsValidity(verificationCode, password, passwordConfirmation)) {
+                    if (viewModel.checkPasswordMatch(password, passwordConfirmation)) {
                         viewModel.confirmResetPassword(verificationCode, password);
                     } else {
                         errorTextView.setVisibility(View.VISIBLE);
@@ -87,8 +94,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         viewModel.getPasswordChangeSuccess().observe(this, new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
-                // TODO Go back to LOGIN
-                // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 finish();
             }
         });
