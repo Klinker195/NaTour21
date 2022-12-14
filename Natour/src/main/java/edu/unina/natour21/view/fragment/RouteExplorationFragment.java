@@ -57,6 +57,12 @@ public class RouteExplorationFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().getViewModelStore().clear();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -79,7 +85,7 @@ public class RouteExplorationFragment extends Fragment {
         });
 
         // Set View Model
-        viewModel = new ViewModelProvider(this).get(RouteExplorationViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(RouteExplorationViewModel.class);
 
         // Set Standard UI
         NatourUIDesignHandler designHandler = new NatourUIDesignHandler();
@@ -104,28 +110,30 @@ public class RouteExplorationFragment extends Fragment {
 
     public void observeViewModel() {
 
-        viewModel.getOnRandomPostFetchSuccess().observe(this.getActivity(), new Observer<Post>() {
+        viewModel.getOnRandomPostFetchSuccess().observe(getViewLifecycleOwner(), new Observer<Post>() {
             @Override
             public void onChanged(Post post) {
-                Intent switchActivityIntent = new Intent(RouteExplorationFragment.this.getContext(), PostDetailsActivity.class);
-                switchActivityIntent.putExtra("postDetails", post);
+                if(post != null) {
+                    Intent switchActivityIntent = new Intent(getActivity(), PostDetailsActivity.class);
+                    switchActivityIntent.putExtra("postDetails", post);
 
-                String[] picsArray = new String[post.getPics().size()];
-                NatourFileHandler fileHandler = new NatourFileHandler();
-                for (int i = 0; i < post.getPics().size(); i++) {
-                    picsArray[i] = fileHandler.createImageFromBitmap(RouteExplorationFragment.this.getContext(), post.getPics().get(0));
+                    String[] picsArray = new String[post.getPics().size()];
+                    NatourFileHandler fileHandler = new NatourFileHandler();
+                    for (int i = 0; i < post.getPics().size(); i++) {
+                        picsArray[i] = fileHandler.createImageFromBitmap(getActivity(), post.getPics().get(0));
+                    }
+                    switchActivityIntent.putExtra("postPics", picsArray);
+
+                    String userPropic;
+                    userPropic = fileHandler.createImageFromBitmap(getActivity(), post.getAuthor().getPropic());
+                    switchActivityIntent.putExtra("userPropic", userPropic);
+
+                    startActivity(switchActivityIntent);
                 }
-                switchActivityIntent.putExtra("postPics", picsArray);
-
-                String userPropic;
-                userPropic = fileHandler.createImageFromBitmap(RouteExplorationFragment.this.getContext(), post.getAuthor().getPropic());
-                switchActivityIntent.putExtra("userPropic", userPropic);
-
-                RouteExplorationFragment.this.getContext().startActivity(switchActivityIntent);
             }
         });
 
-        viewModel.getOnRandomPostFetchFailure().observe(this.getActivity(), new Observer<Void>() {
+        viewModel.getOnRandomPostFetchFailure().observe(getViewLifecycleOwner(), new Observer<Void>() {
             @Override
             public void onChanged(Void unused) {
                 Toast.makeText(getActivity(), "Couldn't fetch random post",

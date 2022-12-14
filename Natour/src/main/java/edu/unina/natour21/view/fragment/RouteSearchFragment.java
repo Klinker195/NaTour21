@@ -164,7 +164,7 @@ public class RouteSearchFragment extends Fragment {
         usersSelectorButton.setEnabled(false);
 
         // Set ViewModel
-        viewModel = new ViewModelProvider(getActivity()).get(RouteExplorationViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(RouteExplorationViewModel.class);
         viewModel.setPosts(new Post[0]);
         viewModel.setUsers(new User[0]);
 

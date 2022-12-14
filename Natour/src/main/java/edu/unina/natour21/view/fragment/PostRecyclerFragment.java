@@ -85,7 +85,7 @@ public class PostRecyclerFragment extends Fragment {
         nothingToSeeImageView = (ImageView) view.findViewById(R.id.fragmentPostRecyclerNothingToSeeImageView);
 
         // Set ViewModel
-        viewModel = new ViewModelProvider(getActivity()).get(RouteExplorationViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(RouteExplorationViewModel.class);
         viewModel.setPosts(new Post[0]);
         viewModel.setUsers(new User[0]);
 

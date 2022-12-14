@@ -134,7 +134,7 @@ public class ProfileDetailsFragment extends Fragment {
         nameSurnameTextView.setTextColor(getResources().getColor(R.color.white));
         nicknameTextView.setTextColor(getResources().getColor(R.color.white));
 
-        viewModel = new ViewModelProvider(getActivity()).get(RouteExplorationViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(RouteExplorationViewModel.class);
         viewModel.setPosts(new Post[0]);
         viewModel.setUsers(new User[0]);
 
