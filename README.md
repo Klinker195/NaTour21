@@ -48,7 +48,7 @@ NaTour21 provides an end‑to‑end experience for hikers: sign up & verificatio
 **Cloud Infrastructure**: EC2 for the Java web server, RDS MySQL for relational persistence (referential integrity, structured queries), and S3 for object storage (user images / media). Security groups, IAM roles & least‑privilege S3 bucket policies (recommended) protect resources.  
 
 ## Project Structure
-_Simplified high‑level view (focus on core classes); adjust to actual package paths as needed:_
+_Simplified high‑level view (focus on core classes):
 ```
 NaTour21/
   app/ (Android module)
