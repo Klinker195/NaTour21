@@ -21,8 +21,6 @@
 7. [Adapters & UI Lists](#adapters--ui-lists)
 8. [Error Handling & Logging](#error-handling--logging)
 9. [Diagrams (PlantUML)](#diagrams-plantuml)
-10. [License](#license)
-11. [Academic Citation](#academic-citation)
 
 ---
 
