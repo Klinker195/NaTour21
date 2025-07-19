@@ -129,9 +129,6 @@ Adapters (`PostCardAdapter`, `UserCardAdapter`, `FavCollectionAdapter`) bind dom
 ## Diagrams (PlantUML)
 The `*.puml` files define domain & architecture diagrams. To render (CLI example):
 ```bash
-# Using Docker
-docker run --rm -v $(pwd)/diagrams:/workspace plantuml/plantuml *.puml
-
 # Or with Java JAR (if plantuml.jar downloaded)
 java -jar plantuml.jar diagrams/*.puml
 ```
